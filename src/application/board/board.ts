@@ -2,6 +2,8 @@ import { Element, Observer } from '@/domain/entities';
 import { RendererProtocol } from '@/domain/protocols';
 
 export class Board {
+	private _events = new Map<string, Function>();
+
 	private _elements: Element[] = [];
 
 	constructor(
@@ -19,9 +21,11 @@ export class Board {
 		this._renderer.LoadElement(element);
 		this._renderer.Update();
 
-		element.transform.observable.Subscribe(new Observer("on-change", () => {
+		const observer = element.transform.observable.Subscribe(new Observer("on-change", () => {
 			this._renderer.Update();
 		}));
+
+		this._events.set(element.uuid, observer);
 	}
 
 	public DetachElement(element: Element): void {
@@ -30,6 +34,7 @@ export class Board {
 		if (index === -1) return;
 
 		this._elements.splice(index, 1);
+		this._events.delete(element.uuid);
 		this._renderer.UnloadElement(element);
 		this._renderer.Update();
 	}

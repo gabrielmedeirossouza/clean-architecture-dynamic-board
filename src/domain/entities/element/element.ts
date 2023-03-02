@@ -1,8 +1,9 @@
+import { Random } from '@/helpers/random';
 import { TextureProtocol } from '@/domain/protocols';
 import { Transform } from '../transform';
 
 export class Element {
-	public readonly uuid = crypto.randomUUID();
+	public readonly uuid = Random.GenerateUUID();
 
 	public readonly children: Element[] = [];
 

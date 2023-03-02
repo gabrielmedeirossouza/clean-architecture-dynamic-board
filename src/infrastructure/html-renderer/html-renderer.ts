@@ -15,7 +15,7 @@ export class HtmlRenderer extends RendererProtocol {
 		this._root.innerHTML = "";
 
 		this._elements.forEach(element => {
-			if (!(element.texture instanceof HtmlTexture)) return;
+			if (!(element.texture instanceof HtmlTexture) || !element.texture.isVisible) return;
 
 			const htmlElement = this._CreateHtmlElement(element);
 			this._root.append(htmlElement);

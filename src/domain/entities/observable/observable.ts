@@ -15,18 +15,16 @@ export class Observable<T extends ObserverMap> {
 		return this._observers;
 	}
 
-	public Subscribe(observer: ObserverOf<T>): ObserverOf<T> {
+	public Subscribe(observer: ObserverOf<T>): CallbackOf<T> {
 		this._observers.push(observer);
 
-		return observer;
+		return observer.callback;
 	}
 
-	public Unsubscribe(observer: ObserverOf<T>): void {
-		const index = this._observers.indexOf(observer);
+	public Unsubscribe(observer: CallbackOf<T>): void {
+		const observers = this._observers.filter(filterObserver => filterObserver.callback !== observer);
 
-		if (index !== -1) {
-			this._observers.splice(index, 1);
-		}
+		this._observers = observers;
 	}
 
 	public Notify<A extends EventOf<T>>(event: A, ...args: Parameters<T[A]>): void {

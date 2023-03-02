@@ -5,7 +5,7 @@ import { Element, Transform } from '@/domain/entities';
 import { Vector2 } from './core/math';
 
 const renderer = new HtmlRenderer(document.querySelector('#board') as HTMLDivElement);
-const app = new Board(renderer);
+const board = new Board(renderer);
 
 const elementA = new Element("A", new Transform(Vector2.zero));
 const elementTexture = new HtmlTexture(
@@ -19,5 +19,4 @@ const elementTexture = new HtmlTexture(
 
 elementA.texture = elementTexture;
 
-app.AttachElement(elementA);
-
+board.AttachElement(elementA);
