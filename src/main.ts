@@ -1,8 +1,9 @@
 import './style.css';
 import { Board } from '@/application';
 import { HtmlRenderer, HtmlTexture, MeasurementUnit, UnitType, ShapeStyle, Color } from '@/infrastructure';
-import { Element, Transform } from '@/domain/entities';
+import { Element, Observer, Transform } from '@/domain/entities';
 import { Vector2 } from './core/math';
+import { Event } from '@/adapters';
 
 const renderer = new HtmlRenderer(document.querySelector('#board') as HTMLDivElement);
 const board = new Board(renderer);
@@ -20,3 +21,7 @@ const elementTexture = new HtmlTexture(
 elementA.texture = elementTexture;
 
 board.AttachElement(elementA);
+
+Event.observable.Subscribe(new Observer("on-mouse-down", (pos) => {
+	console.log(pos);
+}));
