@@ -1,1 +1,1 @@
-export * from './observer-factory'
+export * from './observer-factory';
