@@ -1,9 +1,12 @@
+import { Vector } from "./vector";
 
-export class Vector2 {
+export class Vector2 extends Vector<Vector2> {
 	constructor(
         public x: number,
         public y: number
-	) {}
+	) {
+		super();
+	}
 
 	public static get one(): Vector2 {
 		return new Vector2(1, 1);
@@ -94,19 +97,12 @@ export class Vector2 {
 		return new Vector2(normalizedX, normalizedY);
 	}
 
-	public Equals(other: Vector2): boolean {
-		return this.x === other.x && this.y === other.y;
-	}
-
 	public Clone(): Vector2 {
 		return new Vector2(this.x, this.y);
 	}
 
-	public ToString(): string {
-		return `(${this.x.toFixed(0)},${this.y.toFixed(0)})`;
-	}
-
-	public ToPrecisionString(): string {
-		return `(${this.x.toFixed(6)},${this.y.toFixed(6)})`;
+	public *[Symbol.iterator](): Generator<number> {
+		yield this.x;
+		yield this.y;
 	}
 }
