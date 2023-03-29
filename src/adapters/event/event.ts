@@ -49,9 +49,9 @@ export enum Key {
 }
 
 export type EventObserverMap = {
-    "on-mouse-down": (pos: Vector2) => void,
-    "on-mouse-up": (pos: Vector2) => void,
-    "on-mouse-move": (pos: Vector2) => void,
+    "on-mouse-down": (pos: Vector2, deltaPos: Vector2) => void,
+    "on-mouse-up": (pos: Vector2, deltaPos: Vector2) => void,
+    "on-mouse-move": (pos: Vector2, deltaPos: Vector2) => void,
     "on-key-down": (key: Key) => void,
     "on-key-up": (key: Key) => void,
 }
@@ -61,24 +61,36 @@ export class Event {
 
 	private static _pressedKeys = new Set<Key>();
 
-	public static get pressedKeys(): Set<Key> {
+	public static get pressedKeys(): ReadonlySet<Key> {
 		return Event._pressedKeys;
 	}
 
 	static {
 		window.addEventListener("mousedown", (e) => {
 			e.preventDefault();
-			Event.observable.Notify("on-mouse-down", new Vector2(e.clientX, e.clientY));
+			Event.observable.Notify(
+				"on-mouse-down",
+				new Vector2(e.clientX, (window.innerHeight -1) - e.clientY),
+				new Vector2(e.movementX, -e.movementY)
+			);
 		});
 
 		window.addEventListener("mouseup", (e) => {
 			e.preventDefault();
-			Event.observable.Notify("on-mouse-up", new Vector2(e.clientX, e.clientY));
+			Event.observable.Notify(
+				"on-mouse-up",
+				new Vector2(e.clientX, (window.innerHeight -1) - e.clientY),
+				new Vector2(e.movementX, -e.movementY)
+			);
 		});
 
 		window.addEventListener("mousemove", (e) => {
 			e.preventDefault();
-			Event.observable.Notify("on-mouse-move", new Vector2(e.clientX, e.clientY));
+			Event.observable.Notify(
+				"on-mouse-move",
+				new Vector2(e.clientX, (window.innerHeight -1) - e.clientY),
+				new Vector2(e.movementX, -e.movementY)
+			);
 		});
 
 		window.addEventListener("keydown", (e) => {

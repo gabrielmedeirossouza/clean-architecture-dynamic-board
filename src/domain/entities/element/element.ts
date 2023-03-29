@@ -1,5 +1,5 @@
 import { Random } from '@/helpers/random';
-import { TextureProtocol } from '@/domain/protocols';
+import { StyleProtocol } from '@/domain/protocols';
 import { Transform } from '../transform';
 
 export class Element {
@@ -7,7 +7,7 @@ export class Element {
 
 	public readonly children: Element[] = [];
 
-	public texture?: TextureProtocol;
+	public style?: StyleProtocol;
 
 	constructor(
         public readonly name: string,
