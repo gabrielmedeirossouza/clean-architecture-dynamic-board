@@ -1,7 +1,14 @@
-import { Element } from '@/domain/entities';
+import { Element, Observer } from '@/domain/entities';
+import { CameraProtocol } from '..';
 
 export abstract class RendererProtocol {
 	protected _elements: Element[] = [];
+
+	constructor(
+        public readonly camera: CameraProtocol
+	) {
+		this.camera.observable.Subscribe(new Observer("on-change", () => this._Render()));
+	}
 
 	public Update(): void {
 		this._Render();

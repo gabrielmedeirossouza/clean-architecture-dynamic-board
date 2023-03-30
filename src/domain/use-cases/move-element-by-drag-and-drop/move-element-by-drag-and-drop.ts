@@ -38,7 +38,7 @@ export class MoveElementByDragAndDrop {
 		Event.observable.Subscribe(CreateEventObserver("on-mouse-move", (_, deltaPos) => {
 			if (!this._touchedOverElement) return;
 
-			this._element.transform.position = Vector2.Add(this._element.transform.position, deltaPos);
+			this._element.transform.position = Vector2.Add(this._element.transform.position.Clone(), deltaPos);
 		}));
 
 		Event.observable.Subscribe(CreateEventObserver("on-mouse-up", () => {
@@ -48,7 +48,7 @@ export class MoveElementByDragAndDrop {
 
 	private _UpdateAABB(): AABB {
 		return new AABB(
-			this._element.transform.position,
+			this._element.transform.position.Clone(),
 			this._element.style?.data.width.value || 0,
 			this._element.style?.data.height.value || 0,
 		);

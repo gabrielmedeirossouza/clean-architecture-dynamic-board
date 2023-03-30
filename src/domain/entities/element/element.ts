@@ -15,6 +15,8 @@ export class Element {
 	) {}
 
 	public AttachChild(child: Element): Element {
+		if (this.children.includes(child)) return child; // TODO: Throw a log
+
 		this.children.push(child);
 
 		this._AttachChildTransform(child);

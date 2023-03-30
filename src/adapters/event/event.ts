@@ -54,6 +54,7 @@ export type EventObserverMap = {
     "on-mouse-move": (pos: Vector2, deltaPos: Vector2) => void,
     "on-key-down": (key: Key) => void,
     "on-key-up": (key: Key) => void,
+    "on-zoom": (deltaZoom: number) => void
 }
 
 export class Event {
@@ -66,6 +67,10 @@ export class Event {
 	}
 
 	static {
+		window.addEventListener("wheel", (e) => {
+			Event.observable.Notify("on-zoom", e.deltaY);
+		});
+
 		window.addEventListener("mousedown", (e) => {
 			e.preventDefault();
 			Event.observable.Notify(

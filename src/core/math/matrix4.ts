@@ -33,6 +33,24 @@ export class Matrix4 extends Matrix<Matrix4> {
 		]);
 	}
 
+	public static SetPosition(self: Matrix4, position: Vector3): Matrix4 {
+		const selfClone = self.Clone();
+
+		selfClone.data[M.a14] = position.x;
+		selfClone.data[M.a24] = position.y;
+		selfClone.data[M.a34] = position.z;
+
+		return selfClone;
+	}
+
+	public static GetPosition(self: Matrix4): Vector3 {
+		return new Vector3(
+			self.data[M.a14],
+			self.data[M.a24],
+			self.data[M.a34],
+		);
+	}
+
 	public static Translate(self: Matrix4, position: Vector3): Matrix4 {
 		const { x, y, z } = position;
 
@@ -122,23 +140,49 @@ export class Matrix4 extends Matrix<Matrix4> {
 		return new Matrix4(resultData);
 	}
 
-	public static CreateOrthographicProjection(left: number, right: number, bottom: number, top: number, near: number, far: number): Matrix4 {
-		const width = right - left;
-		const height = top - bottom;
-		const depth = far - near;
-
-		const tx = -(right + left) / width;
-		const ty = -(top + bottom) / height;
-		const tz = -(far + near) / depth;
-
-		const projectionMatrix = new Matrix4([
-			2 / width, 0, 0, tx,
-			0, 2 / height, 0, ty,
-			0, 0, -2 / depth, tz,
-			0, 0, 0, 1
+	public static NDC(self: Matrix4, viewportWidth: number, viewportHeight: number): Matrix4 {
+		const ndcMatrix = new Matrix4([
+			viewportWidth / 2, 0, 0, viewportWidth / 2,
+			0, viewportHeight / 2, 0, viewportHeight / 2,
+			0, 0, 1, 0,
+			0, 0, 0, 1,
 		]);
 
-		return projectionMatrix;
+		return Matrix4.Multiply(self, ndcMatrix);
+	}
+
+	public Translate(position: Vector3): void {
+		this.data = Matrix4.Translate(this, position).data;
+	}
+
+	public SetPosition(position: Vector3): void {
+		this.data[M.a14] = position.x;
+		this.data[M.a24] = position.y;
+		this.data[M.a34] = position.z;
+	}
+
+	public GetPosition(): Vector3 {
+		return new Vector3(this.data[M.a14], this.data[M.a24], this.data[M.a34]);
+	}
+
+	public Scale(scale: Vector3): void {
+		this.data = Matrix4.Scale(this, scale).data;
+	}
+
+	public RotateX(radians: number): void {
+		this.data = Matrix4.RotateX(this, radians).data;
+	}
+
+	public RotateY(radians: number): void {
+		this.data = Matrix4.RotateY(this, radians).data;
+	}
+
+	public RotateZ(radians: number): void {
+		this.data = Matrix4.RotateZ(this, radians).data;
+	}
+
+	public Multiply(matrix: Matrix4): void {
+		this.data = Matrix4.Multiply(this, matrix).data;
 	}
 
 	public Clone(): Matrix4 {

@@ -17,6 +17,8 @@ export class Board {
 	}
 
 	public AttachElement(element: Element): void {
+		if (this._elements.includes(element)) return; // TODO: Throw a log
+
 		this.elements.push(element);
 		this._renderer.LoadElement(element);
 		this._renderer.Update();
