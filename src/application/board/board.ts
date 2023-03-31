@@ -16,18 +16,21 @@ export class Board {
 		return this._elements;
 	}
 
-	public AttachElement(element: Element): void {
-		if (this._elements.includes(element)) return; // TODO: Throw a log
+	public AttachElements(...elements: Element[]): void {
+		elements.forEach((element) => {
+			if (this._elements.includes(element)) return; // TODO: Throw a log
 
-		this.elements.push(element);
-		this._renderer.LoadElement(element);
-		this._renderer.Update();
+			this.elements.push(element);
+			this._renderer.LoadElement(element);
 
-		const observer = element.transform.observable.Subscribe(new Observer("on-change", () => {
-			this._renderer.Update();
-		}));
+			const observer = element.transform.observable.Subscribe(new Observer("on-change", () => {
+				this._renderer.Render();
+			}));
 
-		this._events.set(element.uuid, observer);
+			this._events.set(element.uuid, observer);
+		});
+
+		this._renderer.Render();
 	}
 
 	public DetachElement(element: Element): void {
@@ -38,10 +41,10 @@ export class Board {
 		this._elements.splice(index, 1);
 		this._events.delete(element.uuid);
 		this._renderer.UnloadElement(element);
-		this._renderer.Update();
+		this._renderer.Render();
 	}
 
 	private _Start(): void {
-		this._renderer.Update();
+		this._renderer.Render();
 	}
 }

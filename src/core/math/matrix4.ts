@@ -33,16 +33,6 @@ export class Matrix4 extends Matrix<Matrix4> {
 		]);
 	}
 
-	public static SetPosition(self: Matrix4, position: Vector3): Matrix4 {
-		const selfClone = self.Clone();
-
-		selfClone.data[M.a14] = position.x;
-		selfClone.data[M.a24] = position.y;
-		selfClone.data[M.a34] = position.z;
-
-		return selfClone;
-	}
-
 	public static GetPosition(self: Matrix4): Vector3 {
 		return new Vector3(
 			self.data[M.a14],
@@ -153,12 +143,6 @@ export class Matrix4 extends Matrix<Matrix4> {
 
 	public Translate(position: Vector3): void {
 		this.data = Matrix4.Translate(this, position).data;
-	}
-
-	public SetPosition(position: Vector3): void {
-		this.data[M.a14] = position.x;
-		this.data[M.a24] = position.y;
-		this.data[M.a34] = position.z;
 	}
 
 	public GetPosition(): Vector3 {

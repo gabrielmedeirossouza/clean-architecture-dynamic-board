@@ -2,7 +2,6 @@ import { Board } from '@/application';
 import { GlStyle, MeasurementUnit, UnitType, ShapeStyle, Color, GlRenderer, CameraOrthographic } from '@/infrastructure';
 import { Element, Transform } from '@/domain/entities';
 import { Matrix4, Vector2, Vector3 } from '@/core/math';
-import { MathHelper } from './helpers/math-helper';
 
 const camera = new CameraOrthographic(0, window.innerWidth, 0, window.innerHeight, 0, 1000);
 
@@ -25,37 +24,28 @@ const elementStyle = new GlStyle(
 );
 elementA.style = elementStyle;
 
-const elementB = new Element("B", new Transform(new Vector2(1400, 0)));
-const elementStyleB = new GlStyle(
-	new ShapeStyle({
-		color: new Color(160, 160, 160, 1),
-		width: new MeasurementUnit(150, UnitType.PX),
-		height: new MeasurementUnit(250, UnitType.PX),
-		cornerRadius: new MeasurementUnit(12, UnitType.PX)
-	})
-);
-elementB.style = elementStyleB;
+const elements: Element[] = [];
+for (let i = 0; i < 500; i++) {
+	const randomPosition = new Vector2(Math.random() * 1000, Math.random() * 1000);
+	const randomSize = new Vector2((Math.random() * 100) + 15, (Math.random() * 100) + 15);
+	const randomColor = new Color(Math.random() * 255, Math.random() * 255, Math.random() * 255, 1);
 
-board.AttachElement(elementA);
-board.AttachElement(elementB);
-board.AttachElement(elementB);
+	const randomElement = new Element("Random", new Transform(randomPosition));
+	const randomElementStyle = new GlStyle(
+		new ShapeStyle({
+			color: randomColor,
+			width: new MeasurementUnit(randomSize.x, UnitType.PX),
+			height: new MeasurementUnit(randomSize.y, UnitType.PX),
+			cornerRadius: new MeasurementUnit(12, UnitType.PX)
+		})
+	);
+	randomElement.style = randomElementStyle;
 
-let x= 0;
-setInterval(() => {
-	elementA.transform.position = new Vector2(x, 0);
-	x += 10;
-}, 20);
+	elements.push(randomElement);
+}
+board.AttachElements(...elements);
 
 let clicked = false;
-
-window.addEventListener("keydown", (e) => {
-	if (e.key === "w") {
-		elementA.AttachChild(elementB);
-	} else {
-		elementA.DetachChild(elementB);
-	}
-});
-
 window.addEventListener("mousedown", () => {
 	clicked = true;
 });
@@ -67,15 +57,5 @@ window.addEventListener("mouseup", () => {
 window.addEventListener("mousemove", (e) => {
 	if (!clicked) return;
 
-	camera.projection = Matrix4.SetPosition(camera.projection, translateNormalizedCamera(e));
+	camera.projection = Matrix4.Translate(camera.projection, new Vector3(e.movementX, -e.movementY, 0));
 });
-
-const cameraLocation = new Vector2(0, 0);
-function translateNormalizedCamera(e: MouseEvent): Vector3 {
-	cameraLocation.x += e.movementX;
-	cameraLocation.y += -e.movementY;
-
-	const ndc = MathHelper.NDC(new Vector2(window.innerWidth, window.innerHeight), cameraLocation);
-
-	return new Vector3(ndc.x, ndc.y, 0);
-}
