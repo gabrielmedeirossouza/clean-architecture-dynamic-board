@@ -18,7 +18,8 @@ interface ActorWithStyle extends Actor {
     style: ShapeStyle;
 }
 
-export class GlRenderer extends RendererProtocol {
+export class GlRenderer extends RendererProtocol
+{
 	private readonly _gl: WebGL2RenderingContext;
 
 	private _canvas: HTMLCanvasElement;
@@ -38,7 +39,8 @@ export class GlRenderer extends RendererProtocol {
 		camera: CameraProtocol,
         public readonly width: number,
         public readonly height: number
-	) {
+	)
+	{
 		super(camera);
 
 		const canvas = document.createElement('canvas');
@@ -58,7 +60,8 @@ export class GlRenderer extends RendererProtocol {
 		this._InitializeGl();
 	}
 
-	private _InitializeGl(): void {
+	private _InitializeGl(): void
+	{
 		this._gl.viewport(0, 0, this.width, this.height);
 
 		const vertexShader = this._gl.createShader(this._gl.VERTEX_SHADER)!;
@@ -86,31 +89,38 @@ export class GlRenderer extends RendererProtocol {
 		this._projectionULocation = this._gl.getUniformLocation(this._program, "projection")!;
 		this._gl.clearColor(0.2, 0.23, 0.34, 1);
 
-		this.observable.Subscribe(new ObserverFactory<RendererObserverMap>().CreateObserver("on-load-actor", (actor) => {
+		this.observable.Subscribe(new ObserverFactory<RendererObserverMap>().CreateObserver("on-load-actor", (actor) =>
+		{
 			if (!actor.style) return;
 
-			if (actor.style instanceof ShapeStyle) {
+			if (actor.style instanceof ShapeStyle)
+			{
 				this._CreateCacheShader(actor as ActorWithStyle);
 			}
 		}));
 
-		this.observable.Subscribe(new ObserverFactory<RendererObserverMap>().CreateObserver("on-unload-actor", (actor) => {
+		this.observable.Subscribe(new ObserverFactory<RendererObserverMap>().CreateObserver("on-unload-actor", (actor) =>
+		{
 			this._cacheShaderMap.delete(actor.uuid);
 		}));
 	}
 
-	protected _BeforeRender(): void {
+	protected _BeforeRender(): void
+	{
 		this._gl.clear(this._gl.COLOR_BUFFER_BIT);
 
 		const normalizedProjection = Matrix4.NDC(this.camera.projection, this.width, this.height);
 		this._gl.uniformMatrix4fv(this._projectionULocation, true, new Float32Array(normalizedProjection.data));
 	}
 
-	protected _Render(): void {
-		this._actors.forEach(actor => {
+	protected _Render(): void
+	{
+		this._actors.forEach(actor =>
+		{
 			if (!actor.style) return;
 
-			if (actor.style instanceof ShapeStyle) {
+			if (actor.style instanceof ShapeStyle)
+			{
 				this._RenderActorShapeStyle(actor as ActorWithStyle);
 			}
 
@@ -118,7 +128,8 @@ export class GlRenderer extends RendererProtocol {
 		});
 	}
 
-	private _RenderActorShapeStyle(actor: ActorWithStyle): void {
+	private _RenderActorShapeStyle(actor: ActorWithStyle): void
+	{
 		const { x, y } = actor.transform.position;
 		const halfWidth = actor.style.width.value * 0.5;
 		const halfHeight = actor.style.height.value * 0.5;
@@ -140,7 +151,8 @@ export class GlRenderer extends RendererProtocol {
 		this._gl.uniform4f(cache.colorUL, cache.color[0], cache.color[1], cache.color[2], cache.color[3]);
 	}
 
-	private _CreateCacheShader(actor: ActorWithStyle): void {
+	private _CreateCacheShader(actor: ActorWithStyle): void
+	{
 		const vbo = this._gl.createBuffer()!;
 		GlLog.CheckBufferCreation(vbo);
 		this._gl.bindBuffer(this._gl.ARRAY_BUFFER, vbo);

@@ -6,8 +6,10 @@ type ObserverMap = {
 };
 type EventOf<T> = keyof T & Event;
 
-export class ObserverFactory<K extends ObserverMap> {
-	public CreateObserver<A extends EventOf<K>>(event: A, callback: K[A]): Observer<A, K[A]> {
+export class ObserverFactory<K extends ObserverMap>
+{
+	public CreateObserver<A extends EventOf<K>>(event: A, callback: K[A]): Observer<A, K[A]>
+	{
 		const observer = new Observer<A, K[A]>(event, callback);
 
 		return observer;

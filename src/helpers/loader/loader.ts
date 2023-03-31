@@ -4,13 +4,17 @@ export type TextureResponse = {
   image: HTMLImageElement
 }
 
-export class Loader {
-	public static LoadTexture(location: string): Promise<TextureResponse> {
-		const texture = new Promise<TextureResponse>((resolve, reject) => {
+export class Loader
+{
+	public static LoadTexture(location: string): Promise<TextureResponse>
+	{
+		const texture = new Promise<TextureResponse>((resolve, reject) =>
+		{
 			const image = new Image();
 			image.src = location;
 
-			image.addEventListener('load', () => {
+			image.addEventListener('load', () =>
+			{
 				const canvas = document.createElement('canvas');
 				canvas.width = image.naturalWidth;
 				canvas.height = image.naturalHeight;
@@ -27,7 +31,8 @@ export class Loader {
 				});
 			});
 
-			image.addEventListener("error", () => {
+			image.addEventListener("error", () =>
+			{
 				reject(new Error('Failed to load texture'));
 			});
 		});

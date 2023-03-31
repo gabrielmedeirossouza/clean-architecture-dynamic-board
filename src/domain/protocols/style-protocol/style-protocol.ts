@@ -1,3 +1,4 @@
-export abstract class StyleProtocol {
+export abstract class StyleProtocol
+{
 	public isVisible = true;
 }

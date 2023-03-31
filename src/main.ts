@@ -23,7 +23,8 @@ const actorStyle = new ShapeStyle({
 actorA.style = actorStyle;
 
 const actors: Actor[] = [];
-for (let i = 0; i < 500; i++) {
+for (let i = 0; i < 500; i++)
+{
 	const randomPosition = new Vector2(Math.random() * 1000, Math.random() * 1000);
 	const randomSize = new Vector2((Math.random() * 100) + 15, (Math.random() * 100) + 15);
 	const randomColor = new Color(Math.random() * 255, Math.random() * 255, Math.random() * 255, 1);
@@ -42,15 +43,18 @@ for (let i = 0; i < 500; i++) {
 board.AttachActors(...actors);
 
 let clicked = false;
-window.addEventListener("mousedown", () => {
+window.addEventListener("mousedown", () =>
+{
 	clicked = true;
 });
 
-window.addEventListener("mouseup", () => {
+window.addEventListener("mouseup", () =>
+{
 	clicked = false;
 });
 
-window.addEventListener("mousemove", (e) => {
+window.addEventListener("mousemove", (e) =>
+{
 	if (!clicked) return;
 
 	camera.projection = Matrix4.Translate(camera.projection, new Vector3(e.movementX, -e.movementY, 0));

@@ -47,7 +47,7 @@
       "indent": ["error", "tab"],
       "padded-blocks": ["error", "never"],
       "import/no-extraneous-dependencies": "off",
-      "brace-style": ["error", "1tbs"],
+      "brace-style": ["error", "allman"],
       "no-irregular-whitespace": "error",
       "no-trailing-spaces": "error",
       "eol-last": "error",

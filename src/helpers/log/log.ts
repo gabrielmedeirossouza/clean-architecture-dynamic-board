@@ -18,8 +18,10 @@ const DEFAULT_CONTENT_STYLE = `
 padding-bottom: 4px;
 `;
 
-export class Log {
-	public static Panic(location: string, message: string): void {
+export class Log
+{
+	public static Panic(location: string, message: string): void
+	{
 		const HEADER_STYLE = `
             ${DEFAULT_HEADER_STYLE}
             color: red;

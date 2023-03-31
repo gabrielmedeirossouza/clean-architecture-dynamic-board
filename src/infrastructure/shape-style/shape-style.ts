@@ -8,7 +8,8 @@ interface ShapeStyleConstructor {
     cornerRadius: MeasurementUnit;
 }
 
-export class ShapeStyle extends ShapeStyleProtocol {
+export class ShapeStyle extends ShapeStyleProtocol
+{
 	public readonly width: MeasurementUnit;
 
 	public readonly height: MeasurementUnit;
@@ -17,7 +18,8 @@ export class ShapeStyle extends ShapeStyleProtocol {
 
 	public readonly cornerRadius: MeasurementUnit;
 
-	constructor({ width, height, color, cornerRadius }: ShapeStyleConstructor) {
+	constructor({ width, height, color, cornerRadius }: ShapeStyleConstructor)
+	{
 		super();
 
 		this.width = width;

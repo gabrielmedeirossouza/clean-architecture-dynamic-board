@@ -57,21 +57,26 @@ export type EventObserverMap = {
     "on-zoom": (deltaZoom: number) => void
 }
 
-export class Event {
+export class Event
+{
 	public static readonly observable = new Observable<EventObserverMap>();
 
 	private static _pressedKeys = new Set<Key>();
 
-	public static get pressedKeys(): ReadonlySet<Key> {
+	public static get pressedKeys(): ReadonlySet<Key>
+	{
 		return Event._pressedKeys;
 	}
 
-	static {
-		window.addEventListener("wheel", (e) => {
+	static
+	{
+		window.addEventListener("wheel", (e) =>
+		{
 			Event.observable.Notify("on-zoom", e.deltaY);
 		});
 
-		window.addEventListener("mousedown", (e) => {
+		window.addEventListener("mousedown", (e) =>
+		{
 			e.preventDefault();
 			Event.observable.Notify(
 				"on-mouse-down",
@@ -80,7 +85,8 @@ export class Event {
 			);
 		});
 
-		window.addEventListener("mouseup", (e) => {
+		window.addEventListener("mouseup", (e) =>
+		{
 			e.preventDefault();
 			Event.observable.Notify(
 				"on-mouse-up",
@@ -89,7 +95,8 @@ export class Event {
 			);
 		});
 
-		window.addEventListener("mousemove", (e) => {
+		window.addEventListener("mousemove", (e) =>
+		{
 			e.preventDefault();
 			Event.observable.Notify(
 				"on-mouse-move",
@@ -98,9 +105,11 @@ export class Event {
 			);
 		});
 
-		window.addEventListener("keydown", (e) => {
+		window.addEventListener("keydown", (e) =>
+		{
 			e.preventDefault();
-			if(Event._pressedKeys.has(Event._GetKey(e.key))) {
+			if(Event._pressedKeys.has(Event._GetKey(e.key)))
+			{
 				return;
 			}
 
@@ -108,14 +117,16 @@ export class Event {
 			Event.observable.Notify("on-key-down", Event._GetKey(e.key));
 		});
 
-		window.addEventListener("keyup", (e) => {
+		window.addEventListener("keyup", (e) =>
+		{
 			e.preventDefault();
 			Event._pressedKeys.delete(Event._GetKey(e.key));
 			Event.observable.Notify("on-key-up", Event._GetKey(e.key));
 		});
 	}
 
-	private static _GetKey(possibleKey: string): Key {
+	private static _GetKey(possibleKey: string): Key
+	{
 		const key = possibleKey.toLowerCase();
 
 		const KEY_MAP = new Map<string, Key>([

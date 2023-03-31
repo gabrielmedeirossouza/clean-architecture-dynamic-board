@@ -15,16 +15,19 @@ type Matrix4Data = [
     a41: number, a42: number, a43: number, a44: number,
 ]
 
-export class Matrix4 extends Matrix<Matrix4> {
+export class Matrix4 extends Matrix<Matrix4>
+{
 	public readonly stride = 4;
 
 	constructor(
         public data: Matrix4Data,
-	) {
+	)
+	{
 		super();
 	}
 
-	public static get identity(): Matrix4 {
+	public static get identity(): Matrix4
+	{
 		return new Matrix4([
 			1, 0, 0, 0,
 			0, 1, 0, 0,
@@ -33,7 +36,8 @@ export class Matrix4 extends Matrix<Matrix4> {
 		]);
 	}
 
-	public static GetPosition(self: Matrix4): Vector3 {
+	public static GetPosition(self: Matrix4): Vector3
+	{
 		return new Vector3(
 			self.data[M.a14],
 			self.data[M.a24],
@@ -41,7 +45,8 @@ export class Matrix4 extends Matrix<Matrix4> {
 		);
 	}
 
-	public static Translate(self: Matrix4, position: Vector3): Matrix4 {
+	public static Translate(self: Matrix4, position: Vector3): Matrix4
+	{
 		const { x, y, z } = position;
 
 		const translationMatrix = new Matrix4([
@@ -54,7 +59,8 @@ export class Matrix4 extends Matrix<Matrix4> {
 		return Matrix4.Multiply(self, translationMatrix);
 	}
 
-	public static Scale(self: Matrix4, scale: Vector3): Matrix4 {
+	public static Scale(self: Matrix4, scale: Vector3): Matrix4
+	{
 		const selfClone = self.Clone();
 
 		selfClone.data[M.a11] *= scale.x;
@@ -64,7 +70,8 @@ export class Matrix4 extends Matrix<Matrix4> {
 		return selfClone;
 	}
 
-	public static RotateX(self: Matrix4, radians: number): Matrix4 {
+	public static RotateX(self: Matrix4, radians: number): Matrix4
+	{
 		const sin = Math.sin(radians);
 		const cos = Math.cos(radians);
 
@@ -80,7 +87,8 @@ export class Matrix4 extends Matrix<Matrix4> {
 		return result;
 	}
 
-	public static RotateY(self: Matrix4, radians: number): Matrix4 {
+	public static RotateY(self: Matrix4, radians: number): Matrix4
+	{
 		const sin = Math.sin(radians);
 		const cos = Math.cos(radians);
 
@@ -96,7 +104,8 @@ export class Matrix4 extends Matrix<Matrix4> {
 		return result;
 	}
 
-	public static RotateZ(self: Matrix4, radians: number): Matrix4 {
+	public static RotateZ(self: Matrix4, radians: number): Matrix4
+	{
 		const sin = Number(Math.sin(radians).toFixed(4));
 		const cos = Number(Math.cos(radians).toFixed(4));
 
@@ -112,14 +121,18 @@ export class Matrix4 extends Matrix<Matrix4> {
 		return result;
 	}
 
-	public static Multiply(a: Matrix4, b: Matrix4): Matrix4 {
+	public static Multiply(a: Matrix4, b: Matrix4): Matrix4
+	{
 		const resultData = Array.from({ length: 16 }).fill(0) as Matrix4Data;
 
-		for (let row = 0; row < 4; row++) {
-			for (let col = 0; col < 4; col++) {
+		for (let row = 0; row < 4; row++)
+		{
+			for (let col = 0; col < 4; col++)
+			{
 				let actorValue = 0;
 
-				for (let index = 0; index < 4; index++) {
+				for (let index = 0; index < 4; index++)
+				{
 					actorValue += a.data[index + 4 * row] * b.data[col + 4 * index];
 				}
 
@@ -130,7 +143,8 @@ export class Matrix4 extends Matrix<Matrix4> {
 		return new Matrix4(resultData);
 	}
 
-	public static NDC(self: Matrix4, viewportWidth: number, viewportHeight: number): Matrix4 {
+	public static NDC(self: Matrix4, viewportWidth: number, viewportHeight: number): Matrix4
+	{
 		const ndcMatrix = new Matrix4([
 			viewportWidth / 2, 0, 0, viewportWidth / 2,
 			0, viewportHeight / 2, 0, viewportHeight / 2,
@@ -141,35 +155,43 @@ export class Matrix4 extends Matrix<Matrix4> {
 		return Matrix4.Multiply(self, ndcMatrix);
 	}
 
-	public Translate(position: Vector3): void {
+	public Translate(position: Vector3): void
+	{
 		this.data = Matrix4.Translate(this, position).data;
 	}
 
-	public GetPosition(): Vector3 {
+	public GetPosition(): Vector3
+	{
 		return new Vector3(this.data[M.a14], this.data[M.a24], this.data[M.a34]);
 	}
 
-	public Scale(scale: Vector3): void {
+	public Scale(scale: Vector3): void
+	{
 		this.data = Matrix4.Scale(this, scale).data;
 	}
 
-	public RotateX(radians: number): void {
+	public RotateX(radians: number): void
+	{
 		this.data = Matrix4.RotateX(this, radians).data;
 	}
 
-	public RotateY(radians: number): void {
+	public RotateY(radians: number): void
+	{
 		this.data = Matrix4.RotateY(this, radians).data;
 	}
 
-	public RotateZ(radians: number): void {
+	public RotateZ(radians: number): void
+	{
 		this.data = Matrix4.RotateZ(this, radians).data;
 	}
 
-	public Multiply(matrix: Matrix4): void {
+	public Multiply(matrix: Matrix4): void
+	{
 		this.data = Matrix4.Multiply(this, matrix).data;
 	}
 
-	public Clone(): Matrix4 {
+	public Clone(): Matrix4
+	{
 		return new Matrix4([...this.data] as Matrix4Data);
 	}
 }

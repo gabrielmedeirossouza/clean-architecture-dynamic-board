@@ -1,7 +1,8 @@
 import { Matrix4 } from "@/core/math";
 import { CameraProtocol } from "@/domain/protocols";
 
-export class CameraOrthographic extends CameraProtocol {
+export class CameraOrthographic extends CameraProtocol
+{
 	constructor(
         public left: number,
         public right: number,
@@ -9,7 +10,8 @@ export class CameraOrthographic extends CameraProtocol {
         public top: number,
         public near: number,
         public far: number
-	) {
+	)
+	{
 		const width = right - left;
 		const height = top - bottom;
 		const depth = far - near;

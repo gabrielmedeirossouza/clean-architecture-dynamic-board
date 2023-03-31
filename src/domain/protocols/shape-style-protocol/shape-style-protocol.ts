@@ -1,6 +1,7 @@
 import { MeasurementUnitProtocol, ColorProtocol, StyleProtocol } from '..';
 
-export abstract class ShapeStyleProtocol extends StyleProtocol {
+export abstract class ShapeStyleProtocol extends StyleProtocol
+{
     public abstract readonly color: ColorProtocol
 
     public abstract readonly width: MeasurementUnitProtocol
