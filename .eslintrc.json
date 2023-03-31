@@ -46,6 +46,7 @@
       "newline-before-return": "error",
       "indent": ["error", "tab"],
       "padded-blocks": ["error", "never"],
+      "import/no-extraneous-dependencies": "off",
       "brace-style": ["error", "1tbs"],
       "no-irregular-whitespace": "error",
       "no-trailing-spaces": "error",

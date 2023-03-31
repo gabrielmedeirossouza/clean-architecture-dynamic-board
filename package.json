@@ -5,30 +5,27 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "test": "vitest",
-    "test:ui": "vitest --ui",
-    "build": "tsc && vite build"
+    "build": "tsc && vite build",
+    "lint": "npx eslint . --ext .ts"
   },
   "devDependencies": {
     "@rollup/plugin-alias": "^4.0.3",
-    "@types/node": "^18.14.0",
-    "@typescript-eslint/eslint-plugin": "^5.54.0",
-    "@typescript-eslint/parser": "^5.54.0",
-    "@vitest/ui": "^0.28.5",
-    "eslint": "^8.35.0",
+    "@types/node": "^18.15.11",
+    "@typescript-eslint/eslint-plugin": "^5.57.0",
+    "@typescript-eslint/parser": "^5.57.0",
+    "eslint": "^8.37.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^17.0.0",
-    "eslint-config-prettier": "^8.6.0",
-    "eslint-import-resolver-typescript": "^3.5.3",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-import-resolver-typescript": "^3.5.4",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-sort-class-members": "^1.16.0",
-    "eslint-plugin-unicorn": "^45.0.2",
-    "prettier": "^2.8.4",
-    "typescript": "^5.0.0-beta",
-    "vite": "^4.1.0",
-    "vitest": "^0.28.5"
+    "eslint-plugin-unicorn": "^46.0.0",
+    "prettier": "^2.8.7",
+    "typescript": "^5.0.3",
+    "vite": "^4.2.1"
   }
 }
