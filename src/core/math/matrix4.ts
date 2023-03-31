@@ -117,13 +117,13 @@ export class Matrix4 extends Matrix<Matrix4> {
 
 		for (let row = 0; row < 4; row++) {
 			for (let col = 0; col < 4; col++) {
-				let elementValue = 0;
+				let actorValue = 0;
 
 				for (let index = 0; index < 4; index++) {
-					elementValue += a.data[index + 4 * row] * b.data[col + 4 * index];
+					actorValue += a.data[index + 4 * row] * b.data[col + 4 * index];
 				}
 
-				resultData[col + 4 * row] = elementValue;
+				resultData[col + 4 * row] = actorValue;
 			}
 		}
 

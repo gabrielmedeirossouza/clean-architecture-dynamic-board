@@ -1,23 +1,23 @@
-import { Element, TransformObserverMap } from '@/domain/entities';
+import { Actor, TransformObserverMap } from '@/domain/entities';
 import { ObserverFactory } from  '@/factories/observer-factory';
 import { Event, EventObserverMap } from '@/adapters/event';
 import { AABB } from  '@/helpers/collision';
 import { Vector2 } from '@/core/math';
 
 const CreateEventObserver = new ObserverFactory<EventObserverMap>().CreateObserver;
-const CreateElementTransformObserver = new ObserverFactory<TransformObserverMap>().CreateObserver;
+const CreateActorTransformObserver = new ObserverFactory<TransformObserverMap>().CreateObserver;
 
-export class MoveElementByDragAndDrop {
+export class MoveActorByDragAndDrop {
 	private _aabb: AABB;
 
-	private _touchedOverElement = false;
+	private _touchedOverActor = false;
 
 	private _isDragging = false;
 
-	constructor(private _element: Element) {
+	constructor(private _actor: Actor) {
 		this._aabb = this._UpdateAABB();
 
-		this._element.transform.observable.Subscribe(CreateElementTransformObserver("on-change", () => {
+		this._actor.transform.observable.Subscribe(CreateActorTransformObserver("on-change", () => {
 			this._aabb = this._UpdateAABB();
 		}));
 
@@ -32,13 +32,13 @@ export class MoveElementByDragAndDrop {
 		Event.observable.Subscribe(CreateEventObserver("on-mouse-down", (pos) => {
 			if (!AABB.IsCollidingAABBWithPoint(this._aabb, pos)) return;
 
-			this._touchedOverElement = true;
+			this._touchedOverActor = true;
 		}));
 
 		Event.observable.Subscribe(CreateEventObserver("on-mouse-move", (_, deltaPos) => {
-			if (!this._touchedOverElement) return;
+			if (!this._touchedOverActor) return;
 
-			this._element.transform.position = Vector2.Add(this._element.transform.position.Clone(), deltaPos);
+			this._actor.transform.position = Vector2.Add(this._actor.transform.position.Clone(), deltaPos);
 		}));
 
 		Event.observable.Subscribe(CreateEventObserver("on-mouse-up", () => {
@@ -48,14 +48,14 @@ export class MoveElementByDragAndDrop {
 
 	private _UpdateAABB(): AABB {
 		return new AABB(
-			this._element.transform.position.Clone(),
-			this._element.style?.data.width.value || 0,
-			this._element.style?.data.height.value || 0,
+			this._actor.transform.position.Clone(),
+			this._actor.style?.data.width.value || 0,
+			this._actor.style?.data.height.value || 0,
 		);
 	}
 
 	private _ResetStates(): void {
-		this._touchedOverElement = false;
+		this._touchedOverActor = false;
 		this._isDragging = false;
 	}
 }

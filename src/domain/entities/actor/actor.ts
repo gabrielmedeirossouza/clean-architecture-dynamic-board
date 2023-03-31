@@ -2,10 +2,10 @@ import { Random } from '@/helpers/random';
 import { StyleProtocol } from '@/domain/protocols';
 import { Transform } from '../transform';
 
-export class Element {
+export class Actor {
 	public readonly uuid = Random.GenerateUUID();
 
-	public readonly children: Element[] = [];
+	public readonly children: Actor[] = [];
 
 	public style?: StyleProtocol;
 
@@ -14,7 +14,7 @@ export class Element {
         public readonly transform: Transform
 	) {}
 
-	public AttachChild(child: Element): Element {
+	public AttachChild(child: Actor): Actor {
 		if (this.children.includes(child)) return child; // TODO: Throw a log
 
 		this.children.push(child);
@@ -24,7 +24,7 @@ export class Element {
 		return child;
 	}
 
-	public DetachChild(child: Element): void {
+	public DetachChild(child: Actor): void {
 		const index = this.children.indexOf(child);
 
 		if (index === -1) return;
@@ -33,12 +33,12 @@ export class Element {
 		this.children.splice(index, 1);
 	}
 
-	private _AttachChildTransform(child: Element): void {
+	private _AttachChildTransform(child: Actor): void {
 		this.transform.AttachChild(child.transform);
 		child.transform.SetParent(this.transform);
 	}
 
-	private _DetachChildTransform(child: Element): void {
+	private _DetachChildTransform(child: Actor): void {
 		this.transform.DetachChild(child.transform);
 		child.transform.UnsetParent();
 	}

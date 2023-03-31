@@ -1,15 +1,15 @@
-import { Element, Observable, Observer } from '@/domain/entities';
+import { Actor, Observable, Observer } from '@/domain/entities';
 import { CameraProtocol } from '..';
 
 export type RendererObserverMap = {
-    "on-load-element": (element: Element) => void;
-    "on-unload-element": (element: Element) => void;
+    "on-load-actor": (actor: Actor) => void;
+    "on-unload-actor": (actor: Actor) => void;
 }
 
 export abstract class RendererProtocol {
 	public readonly observable = new Observable<RendererObserverMap>();
 
-	protected _elements: Element[] = [];
+	protected _actors: Actor[] = [];
 
 	constructor(
         public readonly camera: CameraProtocol
@@ -23,18 +23,18 @@ export abstract class RendererProtocol {
 		this._AfterRender?.();
 	}
 
-	public LoadElement(element: Element): void {
-		this._elements.push(element);
-		this.observable.Notify("on-load-element", element);
+	public LoadActor(actor: Actor): void {
+		this._actors.push(actor);
+		this.observable.Notify("on-load-actor", actor);
 	}
 
-	public UnloadElement(element: Element): void {
-		const index = this._elements.indexOf(element);
+	public UnloadActor(actor: Actor): void {
+		const index = this._actors.indexOf(actor);
 
 		if (index === -1) return;
 
-		this._elements.splice(index, 1);
-		this.observable.Notify("on-unload-element", element);
+		this._actors.splice(index, 1);
+		this.observable.Notify("on-unload-actor", actor);
 	}
 
 	protected _BeforeRender?(): void;

@@ -2,7 +2,7 @@ import { CameraProtocol, RendererProtocol, RendererObserverMap } from "@/domain/
 import { GlLog } from '@/helpers/gl';
 import { GlStyle } from "../gl-style";
 import { Matrix4 } from "@/core/math";
-import { Element } from '@/domain/entities';
+import { Actor } from '@/domain/entities';
 import vertexShaderSource from '@/shaders/shape-vertex-shader.glsl?raw';
 import fragmentShaderSource from '@/shaders/shape-fragment-shader.glsl?raw';
 import { ObserverFactory } from "@/factories";
@@ -14,7 +14,7 @@ type CacheShaderMap = {
     colorUL: WebGLUniformLocation;
 }
 
-interface ElementWithStyle extends Element {
+interface ActorWithStyle extends Actor {
     style: GlStyle;
 }
 
@@ -86,16 +86,16 @@ export class GlRenderer extends RendererProtocol {
 		this._projectionULocation = this._gl.getUniformLocation(this._program, "projection")!;
 		this._gl.clearColor(0.2, 0.23, 0.34, 1);
 
-		this.observable.Subscribe(new ObserverFactory<RendererObserverMap>().CreateObserver("on-load-element", (element) => {
-			if (!element.style) return;
+		this.observable.Subscribe(new ObserverFactory<RendererObserverMap>().CreateObserver("on-load-actor", (actor) => {
+			if (!actor.style) return;
 
-			if (element.style instanceof GlStyle) {
-				this._CreateCacheShader(element as ElementWithStyle);
+			if (actor.style instanceof GlStyle) {
+				this._CreateCacheShader(actor as ActorWithStyle);
 			}
 		}));
 
-		this.observable.Subscribe(new ObserverFactory<RendererObserverMap>().CreateObserver("on-unload-element", (element) => {
-			this._cacheShaderMap.delete(element.uuid);
+		this.observable.Subscribe(new ObserverFactory<RendererObserverMap>().CreateObserver("on-unload-actor", (actor) => {
+			this._cacheShaderMap.delete(actor.uuid);
 		}));
 	}
 
@@ -107,21 +107,21 @@ export class GlRenderer extends RendererProtocol {
 	}
 
 	protected _Render(): void {
-		this._elements.forEach(element => {
-			if (!element.style) return;
+		this._actors.forEach(actor => {
+			if (!actor.style) return;
 
-			if (element.style instanceof GlStyle) {
-				this._RenderElementShapeStyle(element as ElementWithStyle);
+			if (actor.style instanceof GlStyle) {
+				this._RenderActorShapeStyle(actor as ActorWithStyle);
 			}
 
 			this._gl.drawElements(this._gl.TRIANGLES, 6, this._gl.UNSIGNED_SHORT, 0);
 		});
 	}
 
-	private _RenderElementShapeStyle(element: ElementWithStyle): void {
-		const { x, y } = element.transform.position;
-		const halfWidth = element.style.data.width.value * 0.5;
-		const halfHeight = element.style.data.height.value * 0.5;
+	private _RenderActorShapeStyle(actor: ActorWithStyle): void {
+		const { x, y } = actor.transform.position;
+		const halfWidth = actor.style.data.width.value * 0.5;
+		const halfHeight = actor.style.data.height.value * 0.5;
 
 		const xl = (x - halfWidth) * this._invWidth;
 		const xr = (x + halfWidth) * this._invWidth;
@@ -135,12 +135,12 @@ export class GlRenderer extends RendererProtocol {
 			xl, yb, 0,
 		]);
 
-		const cache = this._cacheShaderMap.get(element.uuid)!;
+		const cache = this._cacheShaderMap.get(actor.uuid)!;
 		this._gl.bufferData(this._gl.ARRAY_BUFFER, vertices, this._gl.DYNAMIC_DRAW, 0);
 		this._gl.uniform4f(cache.colorUL, cache.color[0], cache.color[1], cache.color[2], cache.color[3]);
 	}
 
-	private _CreateCacheShader(element: ElementWithStyle): void {
+	private _CreateCacheShader(actor: ActorWithStyle): void {
 		const vbo = this._gl.createBuffer()!;
 		GlLog.CheckBufferCreation(vbo);
 		this._gl.bindBuffer(this._gl.ARRAY_BUFFER, vbo);
@@ -163,9 +163,9 @@ export class GlRenderer extends RendererProtocol {
 		this._gl.bufferData(this._gl.ELEMENT_ARRAY_BUFFER, indices, this._gl.DYNAMIC_DRAW);
 
 		const colorUL = this._gl.getUniformLocation(this._program, "shapeColor")!;
-		const [r, g, b, a] = element.style.data.color.value.map(fragmentColor => fragmentColor / 255);
+		const [r, g, b, a] = actor.style.data.color.value.map(fragmentColor => fragmentColor / 255);
 
-		this._cacheShaderMap.set(element.uuid, {
+		this._cacheShaderMap.set(actor.uuid, {
 			vbo,
 			vao,
 			colorUL,
