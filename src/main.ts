@@ -1,5 +1,5 @@
 import { Board } from '@/application';
-import { GlStyle, MeasurementUnit, UnitType, ShapeStyle, Color, GlRenderer, CameraOrthographic } from '@/infrastructure';
+import { MeasurementUnit, UnitType, ShapeStyle, Color, GlRenderer, CameraOrthographic } from '@/infrastructure';
 import { Actor, Transform } from '@/domain/entities';
 import { Matrix4, Vector2, Vector3 } from '@/core/math';
 
@@ -14,14 +14,12 @@ const renderer = new GlRenderer(
 const board = new Board(renderer);
 
 const actorA = new Actor("A", new Transform(new Vector2(1400, 0)));
-const actorStyle = new GlStyle(
-	new ShapeStyle({
-		color: new Color(160, 80, 80, 1),
-		width: new MeasurementUnit(250, UnitType.PX),
-		height: new MeasurementUnit(250, UnitType.PX),
-		cornerRadius: new MeasurementUnit(12, UnitType.PX)
-	})
-);
+const actorStyle = new ShapeStyle({
+	color: new Color(160, 80, 80, 1),
+	width: new MeasurementUnit(250, UnitType.PX),
+	height: new MeasurementUnit(250, UnitType.PX),
+	cornerRadius: new MeasurementUnit(12, UnitType.PX)
+});
 actorA.style = actorStyle;
 
 const actors: Actor[] = [];
@@ -31,14 +29,12 @@ for (let i = 0; i < 500; i++) {
 	const randomColor = new Color(Math.random() * 255, Math.random() * 255, Math.random() * 255, 1);
 
 	const randomActor = new Actor("Random", new Transform(randomPosition));
-	const randomActorStyle = new GlStyle(
-		new ShapeStyle({
-			color: randomColor,
-			width: new MeasurementUnit(randomSize.x, UnitType.PX),
-			height: new MeasurementUnit(randomSize.y, UnitType.PX),
-			cornerRadius: new MeasurementUnit(12, UnitType.PX)
-		})
-	);
+	const randomActorStyle = new ShapeStyle({
+		color: randomColor,
+		width: new MeasurementUnit(randomSize.x, UnitType.PX),
+		height: new MeasurementUnit(randomSize.y, UnitType.PX),
+		cornerRadius: new MeasurementUnit(12, UnitType.PX)
+	});
 	randomActor.style = randomActorStyle;
 
 	actors.push(randomActor);

@@ -1,6 +1,6 @@
 import { CameraProtocol, RendererProtocol, RendererObserverMap } from "@/domain/protocols";
 import { GlLog } from '@/helpers/gl';
-import { GlStyle } from "../gl-style";
+import { ShapeStyle } from "..";
 import { Matrix4 } from "@/core/math";
 import { Actor } from '@/domain/entities';
 import vertexShaderSource from '@/shaders/shape-vertex-shader.glsl?raw';
@@ -15,7 +15,7 @@ type CacheShaderMap = {
 }
 
 interface ActorWithStyle extends Actor {
-    style: GlStyle;
+    style: ShapeStyle;
 }
 
 export class GlRenderer extends RendererProtocol {
@@ -89,7 +89,7 @@ export class GlRenderer extends RendererProtocol {
 		this.observable.Subscribe(new ObserverFactory<RendererObserverMap>().CreateObserver("on-load-actor", (actor) => {
 			if (!actor.style) return;
 
-			if (actor.style instanceof GlStyle) {
+			if (actor.style instanceof ShapeStyle) {
 				this._CreateCacheShader(actor as ActorWithStyle);
 			}
 		}));
@@ -110,7 +110,7 @@ export class GlRenderer extends RendererProtocol {
 		this._actors.forEach(actor => {
 			if (!actor.style) return;
 
-			if (actor.style instanceof GlStyle) {
+			if (actor.style instanceof ShapeStyle) {
 				this._RenderActorShapeStyle(actor as ActorWithStyle);
 			}
 
@@ -120,8 +120,8 @@ export class GlRenderer extends RendererProtocol {
 
 	private _RenderActorShapeStyle(actor: ActorWithStyle): void {
 		const { x, y } = actor.transform.position;
-		const halfWidth = actor.style.data.width.value * 0.5;
-		const halfHeight = actor.style.data.height.value * 0.5;
+		const halfWidth = actor.style.width.value * 0.5;
+		const halfHeight = actor.style.height.value * 0.5;
 
 		const xl = (x - halfWidth) * this._invWidth;
 		const xr = (x + halfWidth) * this._invWidth;
@@ -163,7 +163,7 @@ export class GlRenderer extends RendererProtocol {
 		this._gl.bufferData(this._gl.ELEMENT_ARRAY_BUFFER, indices, this._gl.DYNAMIC_DRAW);
 
 		const colorUL = this._gl.getUniformLocation(this._program, "shapeColor")!;
-		const [r, g, b, a] = actor.style.data.color.value.map(fragmentColor => fragmentColor / 255);
+		const [r, g, b, a] = actor.style.color.value.map(fragmentColor => fragmentColor / 255);
 
 		this._cacheShaderMap.set(actor.uuid, {
 			vbo,
