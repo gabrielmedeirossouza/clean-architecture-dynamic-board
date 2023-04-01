@@ -40,7 +40,7 @@ for (let i = 0; i < 500; i++)
 
 	actors.push(randomActor);
 }
-board.AttachActors(...actors);
+board.AttachActors(actors);
 
 let clicked = false;
 window.addEventListener("mousedown", () =>

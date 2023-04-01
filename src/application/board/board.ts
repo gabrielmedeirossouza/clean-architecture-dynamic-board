@@ -3,7 +3,7 @@ import { RendererProtocol } from '@/domain/protocols';
 
 export class Board
 {
-	private readonly _actors: Actor[] = [];
+	private _actors: Actor[] = [];
 
 	constructor(
         private readonly _renderer: RendererProtocol
@@ -15,34 +15,43 @@ export class Board
 		return this._actors;
 	}
 
-	public AttachActors(...actors: Actor[]): void
+	public AttachActors(actors: Actor[]): void
 	{
-		actors.forEach((actor) =>
+		const actorsToAttach = actors.filter(actor =>
 		{
-			if (this._actors.includes(actor))
-			{
-				console.warn(`Actor ${actor.uuid} already attached`);
+			const index = this._actors.indexOf(actor);
 
-				return;
+			if (index !== -1)
+			{
+				console.warn(`Actor ${actor.name} already attached`);
+
+				return false;
 			}
 
-			this._actors.push(actor);
-			this._renderer.LoadActor(actor);
+			return true;
 		});
+
+		this._actors.push(...actorsToAttach);
+		this._renderer.LoadActors(actorsToAttach);
 	}
 
-	public DetachActor(actor: Actor): void
+	public DetachActors(actors: Actor[]): void
 	{
-		const index = this._actors.indexOf(actor);
-
-		if (index === -1)
+		const actorsToDetach = actors.filter(actor =>
 		{
-			console.warn(`Actor ${actor.uuid} not found`);
+			const index = this._actors.indexOf(actor);
 
-			return;
-		}
+			if (index === -1)
+			{
+				console.warn(`Actor ${actor.name} not found`);
 
-		this._actors.splice(index, 1);
-		this._renderer.UnloadActor(actor);
+				return false;
+			}
+
+			return true;
+		});
+
+		this._actors = this._actors.filter(actor => !actorsToDetach.includes(actor));
+		this._renderer.UnloadActors(actorsToDetach);
 	}
 }

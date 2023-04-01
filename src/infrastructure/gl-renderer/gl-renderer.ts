@@ -7,6 +7,8 @@ import vertexShaderSource from '@/shaders/shape-vertex-shader.glsl?raw';
 import fragmentShaderSource from '@/shaders/shape-fragment-shader.glsl?raw';
 import { ObserverFactory } from "@/factories";
 
+const { CreateObserver } = new ObserverFactory<RendererObserverMap>();
+
 type CacheShaderMap = {
     vbo: WebGLBuffer;
     vao: WebGLVertexArrayObject;
@@ -89,19 +91,25 @@ export class GlRenderer extends RendererProtocol
 		this._projectionULocation = this._gl.getUniformLocation(this._program, "projection")!;
 		this._gl.clearColor(0.2, 0.23, 0.34, 1);
 
-		this.observable.Subscribe(new ObserverFactory<RendererObserverMap>().CreateObserver("on-load-actor", (actor) =>
+		this.observable.Subscribe(CreateObserver("on-load-actors", (actors) =>
 		{
-			if (!actor.style) return;
-
-			if (actor.style instanceof ShapeStyle)
+			actors.forEach(actor =>
 			{
-				this._CreateCacheShader(actor as ActorWithStyle);
-			}
+				if (!actor.style) return;
+
+				if (actor.style instanceof ShapeStyle)
+				{
+					this._CreateCacheShader(actor as ActorWithStyle);
+				}
+			});
 		}));
 
-		this.observable.Subscribe(new ObserverFactory<RendererObserverMap>().CreateObserver("on-unload-actor", (actor) =>
+		this.observable.Subscribe(CreateObserver("on-unload-actors", (actors) =>
 		{
-			this._cacheShaderMap.delete(actor.uuid);
+			actors.forEach(actor =>
+			{
+				this._cacheShaderMap.delete(actor.uuid);
+			});
 		}));
 	}
 
