@@ -3,7 +3,6 @@ import { GlRendererHandlerProtocol, GlRendererProtocol, RendererObserverMap } fr
 import { ShapeStyle } from "../shape-style";
 import { GlLog } from "@/helpers/gl";
 import { ObserverFactory } from "@/factories";
-import { Matrix4 } from "@/core/math";
 import vertexShaderSource from '@/shaders/shape-vertex-shader.glsl?raw';
 import fragmentShaderSource from '@/shaders/shape-fragment-shader.glsl?raw';
 
@@ -31,6 +30,8 @@ export class GlRendererShapeStyleHandler extends GlRendererHandlerProtocol
 	private _program: WebGLProgram = {};
 
 	private _projectionULocation: WebGLUniformLocation = {};
+
+	private _viewportSizeULocation: WebGLUniformLocation = {};
 
 	constructor(
 		next?: GlRendererHandlerProtocol
@@ -86,6 +87,7 @@ export class GlRendererShapeStyleHandler extends GlRendererHandlerProtocol
 
 		renderer.gl.useProgram(this._program);
 		this._projectionULocation = renderer.gl.getUniformLocation(this._program, "projection")!;
+		this._viewportSizeULocation = renderer.gl.getUniformLocation(this._program, "viewportSize")!;
 
 		renderer.observable.Subscribe(CreateObserver("on-unload-actors", (actors) =>
 		{
@@ -99,8 +101,9 @@ export class GlRendererShapeStyleHandler extends GlRendererHandlerProtocol
 	private _Render(renderer: GlRendererProtocol, actor: ActorWithShapeStyle): void
 	{
 		const { width, height } = renderer.canvas;
-		const normalizedProjection = Matrix4.NDC(renderer.camera.projection, width, height);
+		const normalizedProjection = renderer.camera.projection;
 		renderer.gl.uniformMatrix4fv(this._projectionULocation, true, new Float32Array(normalizedProjection.data));
+		renderer.gl.uniform2f(this._viewportSizeULocation, width, height);
 
 		const cache = this._cacheMap.get(actor.uuid)!;
 
