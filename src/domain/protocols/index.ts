@@ -4,3 +4,6 @@ export * from './shape-style-protocol';
 export * from './measurement-unit-protocol';
 export * from './color-protocol';
 export * from './camera-protocol';
+export * from './gl-renderer-protocol';
+export * from './renderer-handler-protocol';
+export * from './gl-renderer-handler-protocol';

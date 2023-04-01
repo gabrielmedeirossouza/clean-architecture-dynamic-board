@@ -12,13 +12,13 @@ export abstract class RendererProtocol
 
 	protected _actors: Actor[] = [];
 
+	private _loaded = false; // TODO: Review a best way to do that.
+
 	constructor(
         public readonly camera: CameraProtocol
 	)
 	{
 		this.camera.observable.Subscribe(new Observer("on-change", this._Update.bind(this)));
-
-		this._Prepare?.();
 	}
 
 	public LoadActors(actors: Actor[]): void
@@ -60,6 +60,12 @@ export abstract class RendererProtocol
 
 	private _Update(): void
 	{
+		if (!this._loaded)
+		{
+			this._Prepare?.();
+			this._loaded = true;
+		}
+		// TODO: Review a best way to do that.
 		this._BeforeRender?.();
 		this._Render?.();
 		this._AfterRender?.();
