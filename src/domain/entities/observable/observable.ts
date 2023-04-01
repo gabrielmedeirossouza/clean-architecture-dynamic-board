@@ -12,7 +12,7 @@ export class Observable<T extends ObserverMap>
 {
 	private _observers: ObserverOf<T>[] = [];
 
-	public get Observers(): ObserverOf<T>[]
+	public get observers(): ObserverOf<T>[]
 	{
 		return this._observers;
 	}

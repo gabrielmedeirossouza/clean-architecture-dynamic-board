@@ -1,7 +1,9 @@
 import { Board } from '@/application';
 import { MeasurementUnit, UnitType, ShapeStyle, Color, GlRenderer, CameraOrthographic } from '@/infrastructure';
-import { Actor, Transform } from '@/domain/entities';
-import { Matrix4, Vector2, Vector3 } from '@/core/math';
+import { Actor, Observer, Transform } from '@/domain/entities';
+import { Vector2 } from '@/core/math';
+import { EventAdapter } from './adapters';
+import { EventMonostate } from './monostates/event-monostate';
 
 const camera = new CameraOrthographic(0, window.innerWidth, 0, window.innerHeight, 0, 1000);
 
@@ -42,20 +44,4 @@ for (let i = 0; i < 500; i++)
 }
 board.AttachActors(actors);
 
-let clicked = false;
-window.addEventListener("mousedown", () =>
-{
-	clicked = true;
-});
-
-window.addEventListener("mouseup", () =>
-{
-	clicked = false;
-});
-
-window.addEventListener("mousemove", (e) =>
-{
-	if (!clicked) return;
-
-	camera.projection = Matrix4.Translate(camera.projection, new Vector3(e.movementX, -e.movementY, 0));
-});
+EventMonostate.event.observable.Subscribe(new Observer("on-mouse-move", console.log));
