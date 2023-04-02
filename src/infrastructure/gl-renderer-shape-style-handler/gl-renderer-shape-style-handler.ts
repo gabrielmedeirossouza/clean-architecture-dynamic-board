@@ -156,8 +156,8 @@ export class GlRendererShapeStyleHandler extends GlRendererHandlerProtocol
 			vao,
 			colorUL,
 			color: [r, g, b, a],
-			invWidth: 1 / renderer.canvas.width,
-			invHeight: 1 / renderer.canvas.height,
+			invWidth: 1 / renderer.canvas.width * 2,
+			invHeight: 1 / renderer.canvas.height * 2,
 		});
 	}
 }

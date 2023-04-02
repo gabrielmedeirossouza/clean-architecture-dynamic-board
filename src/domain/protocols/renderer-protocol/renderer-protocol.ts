@@ -35,6 +35,7 @@ export abstract class RendererProtocol
 			}
 
 			this._actors.push(actor);
+			actor.transform.observable.Subscribe("on-change", this._Update.bind(this));
 		});
 
 		this.observable.Notify("on-load-actors", actors);

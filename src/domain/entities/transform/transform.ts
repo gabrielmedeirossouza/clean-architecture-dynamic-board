@@ -28,12 +28,12 @@ export class Transform
 		return this._parent;
 	}
 
-	public get position(): Readonly<Vector2>
+	public get position(): Vector2
 	{
 		return this._position;
 	}
 
-	public set position(value: Vector2)
+	public SetPosition(value: Vector2): void
 	{
 		const deltaPosition = Vector2.Subtract(value, this.position);
 		this._position = value;
@@ -45,18 +45,18 @@ export class Transform
 
 		this._children.forEach(child =>
 		{
-			child.position = Vector2.Add(child.position, deltaPosition);
+			child.SetPosition(Vector2.Add(child.position, deltaPosition));
 		});
 
 		this.observable.Notify("on-change");
 	}
 
-	public get localPosition(): Readonly<Vector2>
+	public get localPosition(): Vector2
 	{
 		return this._localPosition;
 	}
 
-	public set localPosition(value: Vector2)
+	public SetLocalPosition(value: Vector2): void
 	{
 		const deltaPosition = Vector2.Subtract(value, this.position);
 		this._localPosition = value;
@@ -68,10 +68,20 @@ export class Transform
 
 		this._children.forEach(child =>
 		{
-			child.position = Vector2.Add(child.position, deltaPosition);
+			child.SetPosition(Vector2.Add(child.position, deltaPosition));
 		});
 
 		this.observable.Notify("on-change");
+	}
+
+	public Translate(deltaPosition: Vector2): void
+	{
+		this.SetPosition(Vector2.Add(this.position, deltaPosition));
+	}
+
+	public TranslateLocal(deltaPosition: Vector2): void
+	{
+		this.SetLocalPosition(Vector2.Add(this.localPosition, deltaPosition));
 	}
 
 	public SetParent(parent: Transform): void
