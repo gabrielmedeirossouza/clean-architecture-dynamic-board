@@ -14,15 +14,12 @@ export abstract class CameraProtocol
 	)
 	{}
 
-	/**
-     * @description Get a copy of the projection matrix of the camera. Do not modify the returned value!!!
-     */
 	public get projection(): Readonly<Matrix4>
-	{ // TODO: Check if this is the best way to do this.
+	{
 		return this._projection.Clone();
 	}
 
-	public set projection(data: Matrix4)
+	public SetProjection(data: Matrix4): void
 	{
 		this._projection = data;
 

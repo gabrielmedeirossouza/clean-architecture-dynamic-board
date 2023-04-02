@@ -47,5 +47,5 @@ EventMonostate.event.observable.Subscribe("on-mouse-move", (data) =>
 {
 	if (!EventMonostate.event.pressedMouseButtons.has(MouseButton.Left)) return;
 
-	camera.projection = Matrix4.Translate(camera.projection, new Vector3(data.deltaPos.x, data.deltaPos.y, 0));
+	camera.SetProjection(Matrix4.Translate(camera.projection, new Vector3(data.deltaPos.x, data.deltaPos.y, 0)));
 });
