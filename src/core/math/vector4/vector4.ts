@@ -1,12 +1,12 @@
-import { Vector } from './vector';
+import { Vector } from '../vector';
 
 export class Vector4 extends Vector<Vector4>
 {
 	constructor(
-    public x: number,
-    public y: number,
-    public z: number,
-    public w: number
+        public x: number,
+        public y: number,
+        public z: number,
+        public w: number
 	)
 	{
 		super();

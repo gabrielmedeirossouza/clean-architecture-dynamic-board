@@ -1,5 +1,5 @@
-import { Matrix } from './matrix';
-import { Vector3 } from ".";
+import { Matrix } from '../matrix';
+import { Vector3 } from "..";
 
 enum M {
     a11, a12, a13, a14,
@@ -153,41 +153,6 @@ export class Matrix4 extends Matrix<Matrix4>
 		]);
 
 		return Matrix4.Multiply(self, ndcMatrix);
-	}
-
-	public Translate(position: Vector3): void
-	{
-		this.data = Matrix4.Translate(this, position).data;
-	}
-
-	public GetPosition(): Vector3
-	{
-		return new Vector3(this.data[M.a14], this.data[M.a24], this.data[M.a34]);
-	}
-
-	public Scale(scale: Vector3): void
-	{
-		this.data = Matrix4.Scale(this, scale).data;
-	}
-
-	public RotateX(radians: number): void
-	{
-		this.data = Matrix4.RotateX(this, radians).data;
-	}
-
-	public RotateY(radians: number): void
-	{
-		this.data = Matrix4.RotateY(this, radians).data;
-	}
-
-	public RotateZ(radians: number): void
-	{
-		this.data = Matrix4.RotateZ(this, radians).data;
-	}
-
-	public Multiply(matrix: Matrix4): void
-	{
-		this.data = Matrix4.Multiply(this, matrix).data;
 	}
 
 	public Clone(): Matrix4
