@@ -64,12 +64,18 @@ type KeyboardData = {
 type MouseData = {
     pos: Vector2,
     deltaPos: Vector2
+}
+
+type MouseClickData = {
     button: MouseButton
+} & MouseData;
+
+type EventMouseClickMap = {
+    "on-mouse-down": (data: MouseClickData) => void,
+    "on-mouse-up": (data: MouseClickData) => void,
 }
 
 type EventMouseMap = {
-    "on-mouse-down": (data: MouseData) => void,
-    "on-mouse-up": (data: MouseData) => void,
     "on-mouse-move": (data: MouseData) => void,
 }
 
@@ -78,7 +84,7 @@ type EventKeyboardMap = {
     "on-key-up": (data: KeyboardData) => void,
 }
 
-type EventMap = EventMouseMap & EventKeyboardMap;
+type EventMap = EventMouseMap & EventMouseClickMap & EventKeyboardMap;
 
 export class EventAdapter
 {
@@ -90,8 +96,8 @@ export class EventAdapter
 
 	constructor(target: HTMLElement)
 	{
-		target.addEventListener("mousedown", this._HandleMouseEvents("on-mouse-down"));
-		target.addEventListener("mouseup", this._HandleMouseEvents("on-mouse-up"));
+		target.addEventListener("mousedown", this._HandleMouseClickEvents("on-mouse-down"));
+		target.addEventListener("mouseup", this._HandleMouseClickEvents("on-mouse-up"));
 		target.addEventListener("mousemove", this._HandleMouseEvents("on-mouse-move"));
 		target.addEventListener("keydown", this._HandleKeyboardEvents("on-key-down"));
 		target.addEventListener("keyup", this._HandleKeyboardEvents("on-key-up"));
@@ -107,6 +113,25 @@ export class EventAdapter
 		return this._pressedKeyboardButtons;
 	}
 
+	private _HandleMouseClickEvents(eventName: keyof EventMouseClickMap): (event: MouseEvent) => void
+	{
+		return (event: MouseEvent) =>
+		{
+			event.preventDefault();
+
+			const data = {
+				pos: new Vector2(event.clientX, -event.clientY),
+				deltaPos: new Vector2(event.movementX, -event.movementY),
+				button: this._SetMouseButton(event.button)
+			};
+
+			this.observable.Notify(eventName, data);
+
+			if (eventName === "on-mouse-down") this._pressedMouseButtons.add(data.button);
+			if (eventName === "on-mouse-up") this._pressedMouseButtons.delete(data.button);
+		};
+	}
+
 	private _HandleMouseEvents(eventName: keyof EventMouseMap): (event: MouseEvent) => void
 	{
 		let lastCall = 0;
@@ -115,22 +140,18 @@ export class EventAdapter
 		return (event: MouseEvent) =>
 		{
 			event.preventDefault();
-			lastDeltaPos.x = event.movementX;
-			lastDeltaPos.y = event.movementY;
+			lastDeltaPos.x += event.movementX;
+			lastDeltaPos.y -= event.movementY;
 
 			const now = performance.now();
 			if (now - lastCall < THROTTLE_MOUSE_DELAY) return;
 
 			const data = {
-				pos: new Vector2(event.clientX, event.clientY),
+				pos: new Vector2(event.clientX, -event.clientY),
 				deltaPos: lastDeltaPos,
-				button: this._SetMouseButton(event.button)
 			};
 
 			this.observable.Notify(eventName, data);
-
-			if (eventName === "on-mouse-down") this._pressedMouseButtons.add(data.button);
-			if (eventName === "on-mouse-up") this._pressedMouseButtons.delete(data.button);
 
 			lastCall = now;
 

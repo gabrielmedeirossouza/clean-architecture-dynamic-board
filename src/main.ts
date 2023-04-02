@@ -1,8 +1,8 @@
 import { Board } from '@/application';
 import { MeasurementUnit, UnitType, ShapeStyle, Color, GlRenderer, CameraOrthographic } from '@/infrastructure';
 import { Actor, Transform } from '@/domain/entities';
-import { Vector2 } from '@/core/math';
-import { EventMonostate } from './monostates/event-monostate';
+import { Matrix4, Vector2, Vector3 } from '@/core/math';
+import { EventMonostate, MouseButton } from './monostates';
 
 const camera = new CameraOrthographic(0, window.innerWidth, 0, window.innerHeight, 0, 1000);
 
@@ -24,7 +24,7 @@ const actorStyle = new ShapeStyle({
 actorA.style = actorStyle;
 
 const actors: Actor[] = [];
-for (let i = 0; i < 500; i++)
+for (let i = 0; i < 5000; i++)
 {
 	const randomPosition = new Vector2(Math.random() * 1000, Math.random() * 1000);
 	const randomSize = new Vector2((Math.random() * 100) + 15, (Math.random() * 100) + 15);
@@ -43,9 +43,9 @@ for (let i = 0; i < 500; i++)
 }
 board.AttachActors(actors);
 
-EventMonostate.event.observable.Subscribe("on-key-down", (data) =>
+EventMonostate.event.observable.Subscribe("on-mouse-move", (data) =>
 {
-	console.log(data.key);
-});
+	if (!EventMonostate.event.pressedMouseButtons.has(MouseButton.Left)) return;
 
-EventMonostate.event.observable.Notify("on-key-down", { key: 0 });
+	camera.projection = Matrix4.Translate(camera.projection, new Vector3(data.deltaPos.x, data.deltaPos.y, 0));
+});

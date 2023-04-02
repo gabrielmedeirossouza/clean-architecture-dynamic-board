@@ -1,4 +1,5 @@
 import { EventAdapter } from "@/adapters";
+export { KeyboardButton, MouseButton } from '@/adapters';
 
 export class EventMonostate
 {

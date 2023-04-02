@@ -4,12 +4,12 @@ import { CameraProtocol } from "@/domain/protocols";
 export class CameraOrthographic extends CameraProtocol
 {
 	constructor(
-        public left: number,
-        public right: number,
-        public bottom: number,
-        public top: number,
-        public near: number,
-        public far: number
+		left: number,
+		right: number,
+		bottom: number,
+		top: number,
+		near: number,
+		far: number
 	)
 	{
 		const width = right - left;
