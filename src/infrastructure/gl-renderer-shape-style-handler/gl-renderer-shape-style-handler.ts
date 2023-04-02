@@ -1,12 +1,9 @@
 import { Actor } from "@/domain/entities";
-import { GlRendererHandlerProtocol, GlRendererProtocol, RendererObserverMap } from "@/domain/protocols";
+import { GlRendererHandlerProtocol, GlRendererProtocol } from "@/domain/protocols";
 import { ShapeStyle } from "../shape-style";
 import { GlLog } from "@/helpers/gl";
-import { ObserverFactory } from "@/factories";
 import vertexShaderSource from '@/shaders/shape-vertex-shader.glsl?raw';
 import fragmentShaderSource from '@/shaders/shape-fragment-shader.glsl?raw';
-
-const { CreateObserver } = new ObserverFactory<RendererObserverMap>();
 
 type CacheMap = {
     vbo: WebGLBuffer;
@@ -89,13 +86,13 @@ export class GlRendererShapeStyleHandler extends GlRendererHandlerProtocol
 		this._projectionULocation = renderer.gl.getUniformLocation(this._program, "projection")!;
 		this._viewportSizeULocation = renderer.gl.getUniformLocation(this._program, "viewportSize")!;
 
-		renderer.observable.Subscribe(CreateObserver("on-unload-actors", (actors) =>
+		renderer.observable.Subscribe("on-unload-actors", (actors) =>
 		{
 			actors.forEach(actor =>
 			{
 				this._cacheMap.delete(actor.uuid);
 			});
-		}));
+		});
 	}
 
 	private _Render(renderer: GlRendererProtocol, actor: ActorWithShapeStyle): void

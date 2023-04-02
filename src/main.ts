@@ -1,8 +1,7 @@
 import { Board } from '@/application';
 import { MeasurementUnit, UnitType, ShapeStyle, Color, GlRenderer, CameraOrthographic } from '@/infrastructure';
-import { Actor, Observer, Transform } from '@/domain/entities';
+import { Actor, Transform } from '@/domain/entities';
 import { Vector2 } from '@/core/math';
-import { EventAdapter } from './adapters';
 import { EventMonostate } from './monostates/event-monostate';
 
 const camera = new CameraOrthographic(0, window.innerWidth, 0, window.innerHeight, 0, 1000);
@@ -44,4 +43,9 @@ for (let i = 0; i < 500; i++)
 }
 board.AttachActors(actors);
 
-EventMonostate.event.observable.Subscribe(new Observer("on-mouse-move", console.log));
+EventMonostate.event.observable.Subscribe("on-key-down", (data) =>
+{
+	console.log(data.key);
+});
+
+EventMonostate.event.observable.Notify("on-key-down", { key: 0 });

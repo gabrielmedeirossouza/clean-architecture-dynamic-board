@@ -1,44 +1,54 @@
-import { Observer } from '../observer';
-import type { Event, Callback } from '../observer';
-
-type ObserverMap = {
-  [key: Event]: Callback
-};
-type EventOf<T> = keyof T & Event;
-type CallbackOf<T> = T[keyof T] & Callback;
-type ObserverOf<T extends ObserverMap> = Observer<EventOf<T>, CallbackOf<T>>
-
-export class Observable<T extends ObserverMap>
+type Event = `on-${string}`;
+type Callback = (...args: any[]) => void;
+type Observer = {
+    [key: Event]: Callback;
+}
+export class Observable<T extends Observer>
 {
-	private _observers: ObserverOf<T>[] = [];
+	private _observers: [event: keyof T, callback: T[keyof T]][] = [];
 
-	public get observers(): ObserverOf<T>[]
+	public get observers(): ReadonlyArray<[event: keyof T, callback: T[keyof T]]>
 	{
 		return this._observers;
 	}
 
-	public Subscribe(observer: ObserverOf<T>): CallbackOf<T>
+	public Subscribe<A extends keyof T, B extends T[A]>(eventName: A, eventCallback: B): B
 	{
-		this._observers.push(observer);
+		const isAlreadyRegistered = this._observers.some(([event, callback]) => event === eventName && callback === eventCallback);
 
-		return observer.callback;
-	}
-
-	public Unsubscribe(observer: CallbackOf<T>): void
-	{
-		const observers = this._observers.filter(filterObserver => filterObserver.callback !== observer);
-
-		this._observers = observers;
-	}
-
-	public Notify<A extends EventOf<T>>(event: A, ...args: Parameters<T[A]>): void
-	{
-		this._observers.forEach(observer =>
+		if (isAlreadyRegistered)
 		{
-			if (observer.event === event)
-			{
-				observer.callback(...args);
-			}
+			console.warn(`Observable: Trying to subscribe an already existing observer`);
+
+			return eventCallback;
+		}
+
+		this._observers.push([eventName, eventCallback]);
+
+		return eventCallback;
+	}
+
+	public Unsubscribe<A extends keyof T, B extends T[A]>(eventName: A, eventCallback: B): void
+	{
+		const index = this._observers.findIndex(([event, callback]) => event === eventName && callback === eventCallback);
+
+		if (index === -1)
+		{
+			console.warn(`Observable: Trying to unsubscribe an unexisting observer`);
+
+			return;
+		}
+
+		this._observers.splice(index, 1);
+	}
+
+	public Notify<A extends keyof T, B extends Parameters<T[A] extends Callback ? T[A] : never>>(eventName: A, ...args: B): void
+	{
+		this._observers.forEach(([event, callback]) =>
+		{
+			if (event !== eventName) return;
+
+			(callback as Callback)(...args);
 		});
 	}
 }

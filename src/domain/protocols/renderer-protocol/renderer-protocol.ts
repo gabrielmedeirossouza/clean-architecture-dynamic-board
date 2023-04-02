@@ -1,7 +1,7 @@
-import { Actor, Observable, Observer } from '@/domain/entities';
+import { Actor, Observable } from '@/domain/entities';
 import { CameraProtocol } from '..';
 
-export type RendererObserverMap = {
+type RendererObserverMap = {
     "on-load-actors": (actors: Actor[]) => void;
     "on-unload-actors": (actors: Actor[]) => void;
 }
@@ -18,7 +18,7 @@ export abstract class RendererProtocol
         public readonly camera: CameraProtocol
 	)
 	{
-		this.camera.observable.Subscribe(new Observer("on-change", this._Update.bind(this)));
+		this.camera.observable.Subscribe("on-change", this._Update.bind(this));
 	}
 
 	public LoadActors(actors: Actor[]): void

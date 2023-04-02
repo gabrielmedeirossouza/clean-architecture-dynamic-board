@@ -1,7 +1,7 @@
 import { Vector2 } from "@/core/math";
 import { Observable } from '../observable';
 
-export type TransformObserverMap = {
+type TransformObserverMap = {
     "on-change": () => void
 }
 

@@ -57,28 +57,28 @@ export enum MouseButton {
     Right,
 }
 
-export type KeyboardData = {
+type KeyboardData = {
     key: KeyboardButton
 }
 
-export type MouseData = {
+type MouseData = {
     pos: Vector2,
     deltaPos: Vector2
     button: MouseButton
 }
 
-export type EventMouseMap = {
+type EventMouseMap = {
     "on-mouse-down": (data: MouseData) => void,
     "on-mouse-up": (data: MouseData) => void,
     "on-mouse-move": (data: MouseData) => void,
 }
 
-export type EventKeyboardMap = {
+type EventKeyboardMap = {
     "on-key-down": (data: KeyboardData) => void,
     "on-key-up": (data: KeyboardData) => void,
 }
 
-export type EventMap = EventMouseMap & EventKeyboardMap;
+type EventMap = EventMouseMap & EventKeyboardMap;
 
 export class EventAdapter
 {
@@ -127,10 +127,7 @@ export class EventAdapter
 				button: this._SetMouseButton(event.button)
 			};
 
-			this.observable.observers.forEach((observer) =>
-			{
-				if (eventName === observer.event) observer.callback(data);
-			});
+			this.observable.Notify(eventName, data);
 
 			if (eventName === "on-mouse-down") this._pressedMouseButtons.add(data.button);
 			if (eventName === "on-mouse-up") this._pressedMouseButtons.delete(data.button);
@@ -151,10 +148,7 @@ export class EventAdapter
 				key: this._SetKeyboardButton(event.key)
 			};
 
-			this.observable.observers.forEach((observer) =>
-			{
-				if (eventName === observer.event) observer.callback(data);
-			});
+			this.observable.Notify(eventName, data);
 
 			if (eventName === "on-key-down") this._pressedKeyboardButtons.add(data.key);
 			if (eventName === "on-key-up") this._pressedKeyboardButtons.delete(data.key);
