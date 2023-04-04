@@ -14,9 +14,9 @@ export abstract class CameraProtocol
 	)
 	{}
 
-	public get projection(): Readonly<Matrix4>
+	public get projection(): Matrix4
 	{
-		return this._projection.Clone();
+		return this._projection;
 	}
 
 	public SetProjection(data: Matrix4): void

@@ -6,7 +6,7 @@ export class Actor
 {
 	public readonly uuid = Random.GenerateUUID();
 
-	public readonly children: Actor[] = [];
+	public readonly children = new Set<Actor>();
 
 	public style?: StyleProtocol;
 
@@ -16,25 +16,38 @@ export class Actor
 	)
 	{}
 
-	public AttachChild(child: Actor): Actor
+	public SetParent(parent: Actor): void
 	{
-		if (this.children.includes(child)) return child; // TODO: Throw a log
+		this.transform.SetParent(parent.transform);
+	}
 
-		this.children.push(child);
+	public UnsetParent(): void
+	{
+		this.transform.UnsetParent();
+	}
+
+	public AttachChild(child: Actor): void
+	{
+		if (this.children.has(child))
+			console.warn(`Actor ${this.name} already has child ${child.name}`);
+
+		this.children.add(child);
 
 		this._AttachChildTransform(child);
-
-		return child;
 	}
 
 	public DetachChild(child: Actor): void
 	{
-		const index = this.children.indexOf(child);
+		if (!this.children.has(child))
+		{
+			console.warn(`Actor ${this.name} doesn't have child ${child.name}`);
 
-		if (index === -1) return;
+			return;
+		}
+
+		this.children.delete(child);
 
 		this._DetachChildTransform(child);
-		this.children.splice(index, 1);
 	}
 
 	private _AttachChildTransform(child: Actor): void

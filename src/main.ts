@@ -1,9 +1,8 @@
 import { Board } from '@/application';
 import { MeasurementUnit, UnitType, ShapeStyle, Color, GlRenderer, CameraOrthographic } from '@/infrastructure';
-import { Actor, Transform } from '@/domain/entities';
+import { Actor, Position, Transform } from '@/domain/entities';
 import { Matrix4, Vector2, Vector3 } from '@/core/math';
 import { EventMonostate, MouseButton } from './monostates';
-import { MathHelper } from './helpers/math-helper';
 
 const camera = new CameraOrthographic(0, window.innerWidth, 0, window.innerHeight, 0, 1000);
 
@@ -15,7 +14,7 @@ const renderer = new GlRenderer(
 );
 const board = new Board(renderer);
 
-const actorA = new Actor("A", new Transform(new Vector2(0, 0)));
+const actorA = new Actor("A", new Transform(new Position(new Vector2(0, 0))));
 const actorStyle = new ShapeStyle({
 	color: new Color(160, 80, 80, 1),
 	width: new MeasurementUnit(250, UnitType.PX),
@@ -25,13 +24,13 @@ const actorStyle = new ShapeStyle({
 actorA.style = actorStyle;
 
 const actors: Actor[] = [];
-for (let i = 0; i < 500; i++)
+for (let i = 0; i < 5000; i++)
 {
 	const randomPosition = new Vector2((Math.random() * 1000) - 500, (Math.random() * 1000) - 500);
 	const randomSize = new Vector2((Math.random() * 100) + 15, (Math.random() * 100) + 15);
 	const randomColor = new Color(Math.random() * 255, Math.random() * 255, Math.random() * 255, 1);
 
-	const randomActor = new Actor("Random", new Transform(randomPosition));
+	const randomActor = new Actor("Random", new Transform(new Position(randomPosition)));
 	const randomActorStyle = new ShapeStyle({
 		color: randomColor,
 		width: new MeasurementUnit(randomSize.x, UnitType.PX),
@@ -44,9 +43,9 @@ for (let i = 0; i < 500; i++)
 }
 board.AttachActors([...actors, actorA]);
 
-// camera.SetProjection(Matrix4.RotateZ(camera.projection, MathHelper.DegreesToRadians(45)));
-
-EventMonostate.event.observable.Subscribe("on-key-down", () =>
+EventMonostate.event.observable.Subscribe("on-mouse-move", (data) =>
 {
-	actorA.transform.Translate(Vector2.Rotate(actorA.transform.position, MathHelper.DegreesToRadians(45)));
+	if (!EventMonostate.event.pressedMouseButtons.has(MouseButton.Left)) return;
+
+	camera.SetProjection(Matrix4.Translate(camera.projection, new Vector3(data.deltaPos.x, data.deltaPos.y, 0)));
 });

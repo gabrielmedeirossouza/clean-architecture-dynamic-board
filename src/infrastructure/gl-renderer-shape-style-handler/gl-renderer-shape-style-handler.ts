@@ -104,7 +104,7 @@ export class GlRendererShapeStyleHandler extends GlRendererHandlerProtocol
 
 		const cache = this._cacheMap.get(actor.uuid)!;
 
-		const { x, y } = actor.transform.position;
+		const { x, y } = actor.transform.position.world;
 		const halfWidth = actor.style.width.value * 0.5;
 		const halfHeight = actor.style.height.value * 0.5;
 
