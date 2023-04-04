@@ -54,4 +54,9 @@ export class Board
 		this._actors = this._actors.filter(actor => !actorsToDetach.includes(actor));
 		this._renderer.UnloadActors(actorsToDetach);
 	}
+
+	public Update(): void
+	{
+		this._renderer.Update();
+	}
 }

@@ -1,13 +1,7 @@
-import { Observable, Position } from '..';
-
-type TransformObserverMap = {
-    "on-change": () => void
-}
+import { Position } from '..';
 
 export class Transform
 {
-	public readonly observable = new Observable<TransformObserverMap>();
-
 	constructor(
         public readonly position: Position,
 	)

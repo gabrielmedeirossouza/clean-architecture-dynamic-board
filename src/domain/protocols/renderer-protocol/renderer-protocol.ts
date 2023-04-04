@@ -12,14 +12,12 @@ export abstract class RendererProtocol
 
 	protected _actors: Actor[] = [];
 
-	private _loaded = false; // TODO: Review a best way to do that.
+	private _loaded = false;
 
 	constructor(
         public readonly camera: CameraProtocol
 	)
-	{
-		this.camera.observable.Subscribe("on-change", this._Update.bind(this));
-	}
+	{}
 
 	public LoadActors(actors: Actor[]): void
 	{
@@ -35,11 +33,9 @@ export abstract class RendererProtocol
 			}
 
 			this._actors.push(actor);
-			actor.transform.observable.Subscribe("on-change", this._Update.bind(this));
 		});
 
 		this.observable.Notify("on-load-actors", actors);
-		this._Update();
 	}
 
 	public UnloadActors(actors: Actor[]): void
@@ -56,17 +52,16 @@ export abstract class RendererProtocol
 		});
 
 		this.observable.Notify("on-unload-actors", unloadedActors);
-		this._Update();
 	}
 
-	private _Update(): void
+	public Update(): void
 	{
 		if (!this._loaded)
 		{
 			this._Prepare?.();
 			this._loaded = true;
 		}
-		// TODO: Review a best way to do that.
+
 		this._BeforeRender?.();
 		this._Render?.();
 		this._AfterRender?.();
