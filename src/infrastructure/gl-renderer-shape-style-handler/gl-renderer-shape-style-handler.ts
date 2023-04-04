@@ -20,7 +20,7 @@ interface ActorWithShapeStyle extends Actor {
 
 export class GlRendererShapeStyleHandler extends GlRendererHandlerProtocol
 {
-	private _loaded = false; // TODO: Check if this is the best way to do this
+	private _loaded = false;
 
 	private _cacheMap = new Map<string, CacheMap>();
 
