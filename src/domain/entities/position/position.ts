@@ -1,5 +1,5 @@
-import { Vector2 } from "@/core/math";
-import { Observable } from "..";
+import { Vector2 } from "@/core";
+import { Observable } from "@/domain";
 
 type TransformObserverMap = {
     "on-change": () => void,

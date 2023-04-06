@@ -1,5 +1,5 @@
-import { Matrix4 } from "@/core/math";
-import { CameraProtocol } from "@/domain/protocols";
+import { Matrix4 } from "@/core";
+import { CameraProtocol } from "@/domain";
 
 export class CameraOrthographic extends CameraProtocol
 {

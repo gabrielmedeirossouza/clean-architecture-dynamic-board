@@ -1,4 +1,4 @@
-import { RendererHandlerProtocol } from "..";
+import { RendererHandlerProtocol } from "@/domain";
 
 export abstract class GlRendererHandlerProtocol extends RendererHandlerProtocol
 {

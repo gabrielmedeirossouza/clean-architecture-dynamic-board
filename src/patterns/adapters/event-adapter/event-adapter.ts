@@ -1,5 +1,5 @@
-import { Vector2 } from '@/core/math';
-import { Observable } from '@/domain/entities';
+import { Vector2 } from '@/core';
+import { Observable } from '@/domain';
 
 const THROTTLE_MOUSE_DELAY = 1000 / 75;
 

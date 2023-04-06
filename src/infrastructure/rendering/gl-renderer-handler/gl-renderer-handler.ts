@@ -1,5 +1,4 @@
-import { Actor } from "@/domain/entities";
-import { GlRendererHandlerProtocol, GlRendererProtocol } from "@/domain/protocols";
+import { Actor, GlRendererHandlerProtocol, GlRendererProtocol } from "@/domain";
 
 export class GlRendererHandler extends GlRendererHandlerProtocol
 {

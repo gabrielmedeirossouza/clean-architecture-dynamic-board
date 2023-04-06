@@ -1,5 +1,4 @@
-import { Actor } from "@/domain/entities";
-import { RendererProtocol } from "..";
+import { Actor, RendererProtocol } from "@/domain";
 
 export abstract class RendererHandlerProtocol
 {

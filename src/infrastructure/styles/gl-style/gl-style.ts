@@ -1,4 +1,4 @@
-import { StyleProtocol } from "@/domain/protocols";
+import { StyleProtocol } from "@/domain";
 
 export class GlStyle extends StyleProtocol
 {}

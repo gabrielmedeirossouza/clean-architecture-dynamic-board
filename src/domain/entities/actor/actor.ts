@@ -1,6 +1,5 @@
-import { Random } from '@/helpers/random';
-import { StyleProtocol } from '@/domain/protocols';
-import { Transform } from '../transform';
+import { Random } from '@/core';
+import { Transform, StyleProtocol } from '@/domain';
 
 export class Actor
 {

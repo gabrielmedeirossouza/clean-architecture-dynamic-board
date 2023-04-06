@@ -1,4 +1,4 @@
-import { Position } from '..';
+import { Position } from '@/domain';
 
 export class Transform
 {

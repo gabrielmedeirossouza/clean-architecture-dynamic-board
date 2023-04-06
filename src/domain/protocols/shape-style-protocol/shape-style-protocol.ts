@@ -1,4 +1,4 @@
-import { MeasurementUnitProtocol, ColorProtocol, StyleProtocol } from '..';
+import { MeasurementUnitProtocol, ColorProtocol, StyleProtocol } from '@/domain';
 
 export abstract class ShapeStyleProtocol extends StyleProtocol
 {

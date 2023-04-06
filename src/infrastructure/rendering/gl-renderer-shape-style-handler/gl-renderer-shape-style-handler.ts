@@ -1,7 +1,6 @@
-import { Actor } from "@/domain/entities";
-import { GlRendererHandlerProtocol, GlRendererProtocol } from "@/domain/protocols";
+import { GlLog } from "@/core";
+import { Actor, GlRendererHandlerProtocol, GlRendererProtocol } from "@/domain";
 import { ShapeStyle } from "@/infrastructure";
-import { GlLog } from "@/helpers/gl";
 import vertexShaderSource from '@/shaders/shape-style-vertex-shader.glsl?raw';
 import fragmentShaderSource from '@/shaders/shape-style-fragment-shader.glsl?raw';
 

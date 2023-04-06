@@ -1,4 +1,4 @@
-import { ColorProtocol } from "@/domain/protocols";
+import { ColorProtocol } from "@/domain";
 
 export class Color implements ColorProtocol
 {

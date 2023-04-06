@@ -1,5 +1,5 @@
-import { Matrix4 } from "@/core/math";
-import { Observable } from "@/domain/entities";
+import { Matrix4 } from "@/core";
+import { Observable } from "@/domain";
 
 type CameraObserverMap = {
     "on-change": () => void;

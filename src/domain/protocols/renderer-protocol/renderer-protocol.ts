@@ -1,5 +1,4 @@
-import { Actor, Observable } from '@/domain/entities';
-import { CameraProtocol } from '..';
+import { Actor, Observable, CameraProtocol } from '@/domain';
 
 type RendererObserverMap = {
     "on-load-actors": (actors: Actor[]) => void;
