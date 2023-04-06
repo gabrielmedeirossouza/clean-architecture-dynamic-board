@@ -1,5 +1,5 @@
 import { Matrix } from '../matrix';
-import { Vector3 } from "..";
+import { Vector2, Vector3 } from "..";
 
 enum M {
     a11, a12, a13, a14,
@@ -143,16 +143,14 @@ export class Matrix4 extends Matrix<Matrix4>
 		return new Matrix4(resultData);
 	}
 
-	public static NDC(self: Matrix4, viewportWidth: number, viewportHeight: number): Matrix4
+	public static Matrix4FromVector2(vec: Vector2): Matrix4
 	{
-		const ndcMatrix = new Matrix4([
-			viewportWidth / 2, 0, 0, viewportWidth / 2,
-			0, viewportHeight / 2, 0, viewportHeight / 2,
+		return new Matrix4([
+			1, 0, 0, vec.x,
+			0, 1, 0, vec.y,
 			0, 0, 1, 0,
 			0, 0, 0, 1,
 		]);
-
-		return Matrix4.Multiply(self, ndcMatrix);
 	}
 
 	public Clone(): Matrix4

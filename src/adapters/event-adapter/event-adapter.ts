@@ -94,13 +94,15 @@ export class EventAdapter
 
 	private readonly _pressedKeyboardButtons = new Set<KeyboardButton>();
 
-	constructor(target: HTMLElement)
+	constructor(
+        private readonly _target: HTMLElement
+	)
 	{
-		target.addEventListener("mousedown", this._HandleMouseClickEvents("on-mouse-down"));
-		target.addEventListener("mouseup", this._HandleMouseClickEvents("on-mouse-up"));
-		target.addEventListener("mousemove", this._HandleMouseEvents("on-mouse-move"));
-		target.addEventListener("keydown", this._HandleKeyboardEvents("on-key-down"));
-		target.addEventListener("keyup", this._HandleKeyboardEvents("on-key-up"));
+		_target.addEventListener("mousedown", this._HandleMouseClickEvents("on-mouse-down"));
+		_target.addEventListener("mouseup", this._HandleMouseClickEvents("on-mouse-up"));
+		_target.addEventListener("mousemove", this._HandleMouseEvents("on-mouse-move"));
+		_target.addEventListener("keydown", this._HandleKeyboardEvents("on-key-down"));
+		_target.addEventListener("keyup", this._HandleKeyboardEvents("on-key-up"));
 	}
 
 	public get pressedMouseButtons(): ReadonlySet<MouseButton>
@@ -120,7 +122,7 @@ export class EventAdapter
 			event.preventDefault();
 
 			const data = {
-				pos: new Vector2(event.clientX, -event.clientY),
+				pos: new Vector2(event.clientX, this._target.clientHeight - event.clientY),
 				deltaPos: new Vector2(event.movementX, -event.movementY),
 				button: this._SetMouseButton(event.button)
 			};
@@ -147,7 +149,7 @@ export class EventAdapter
 			if (now - lastCall < THROTTLE_MOUSE_DELAY) return;
 
 			const data = {
-				pos: new Vector2(event.clientX, -event.clientY),
+				pos: new Vector2(event.clientX, this._target.clientHeight - event.clientY),
 				deltaPos: lastDeltaPos,
 			};
 

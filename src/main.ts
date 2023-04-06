@@ -23,41 +23,30 @@ const actorStyle = new ShapeStyle({
 });
 actorA.style = actorStyle;
 
-const actors: Actor[] = [];
-for (let i = 0; i < 5000; i++)
-{
-	const randomPosition = new Vector2((Math.random() * 1000) - 500, (Math.random() * 1000) - 500);
-	const randomSize = new Vector2((Math.random() * 100) + 15, (Math.random() * 100) + 15);
-	const randomColor = new Color(Math.random() * 255, Math.random() * 255, Math.random() * 255, 1);
-
-	const randomActor = new Actor("Random", new Transform(new Position(randomPosition)));
-	const randomActorStyle = new ShapeStyle({
-		color: randomColor,
-		width: new MeasurementUnit(randomSize.x, UnitType.PX),
-		height: new MeasurementUnit(randomSize.y, UnitType.PX),
-		cornerRadius: new MeasurementUnit(12, UnitType.PX)
-	});
-	randomActor.style = randomActorStyle;
-
-	actors.push(randomActor);
-}
-board.AttachActors([...actors, actorA]);
+board.AttachActors([actorA]);
 
 board.Update();
 
 EventMonostate.event.observable.Subscribe("on-mouse-move", (data) =>
 {
-	if (!EventMonostate.event.pressedMouseButtons.has(MouseButton.Left)) return;
+	// if (!EventMonostate.event.pressedMouseButtons.has(MouseButton.Left)) return;
 
-	camera.SetProjection(Matrix4.Translate(camera.projection, new Vector3(data.deltaPos.x, data.deltaPos.y, 0)));
+	// camera.SetProjection(Matrix4.Translate(camera.projection, new Vector3(data.deltaPos.x, data.deltaPos.y, 0)));
+	actorA.transform.position.TranslateWorld(data.deltaPos);
 	board.Update();
+
+	const actorAMatrix = Matrix4.identity;
+	actorAMatrix.data[3] = actorA.transform.position.world.x;
+	actorAMatrix.data[7] = actorA.transform.position.world.y;
+	actorAMatrix.data[11] = actorA.transform.position.depth;
+
+	console.log(Matrix4.Multiply(camera.projection, actorAMatrix).ToString());
 });
 
 EventMonostate.event.observable.Subscribe("on-key-down", (data) =>
 {
 	if (data.key === KeyboardButton.D)
 	{
-		console.log("entrou");
 		board.actors.forEach((actor) =>
 		{
 			actor.transform.position.TranslateWorld(new Vector2(10, 0));
