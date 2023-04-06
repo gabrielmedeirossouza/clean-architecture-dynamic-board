@@ -1,5 +1,5 @@
 import { CameraProtocol, GlRendererProtocol } from "@/domain/protocols";
-import { GlRendererHandler, GlRendererShapeStyleHandler } from "..";
+import { GlRendererHandler, GlRendererShapeStyleHandler } from "../..";
 
 export class GlRenderer extends GlRendererProtocol
 {
