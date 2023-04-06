@@ -1,8 +1,5 @@
-export abstract class CanvasProviderProtocol<T>
-{
-    public abstract get width(): number;
-
-    public abstract get height(): number;
-
-    public abstract get context(): T;
+export interface CanvasProviderProtocol<T> {
+    readonly width: number;
+    readonly height: number;
+    readonly context: T;
 }

@@ -1,17 +1,12 @@
-import { CameraProtocol, RendererProtocol } from "@/domain";
+import { CameraProtocol, CanvasProviderProtocol, RendererProtocol } from "@/domain";
 
-export abstract class GlRendererProtocol extends RendererProtocol
+export abstract class GlRendererProtocol<T> extends RendererProtocol
 {
 	constructor(
 		camera: CameraProtocol,
-        public readonly width: number,
-        public readonly height: number
+		public readonly canvasProvider: CanvasProviderProtocol<T>,
 	)
 	{
 		super(camera);
 	}
-
-    public abstract readonly gl: WebGL2RenderingContext;
-
-    public abstract readonly canvas: HTMLCanvasElement;
 }
