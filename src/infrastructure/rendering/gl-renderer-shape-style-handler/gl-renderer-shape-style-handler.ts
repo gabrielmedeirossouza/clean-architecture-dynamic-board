@@ -1,8 +1,8 @@
 import { GlLog } from "@/core";
 import { Actor, GlRendererHandlerProtocol, GlRendererProtocol } from "@/domain";
 import { ShapeStyle } from "@/infrastructure";
-import vertexShaderSource from '@/shaders/shape-style-vertex-shader.glsl?raw';
-import fragmentShaderSource from '@/shaders/shape-style-fragment-shader.glsl?raw';
+import vertexShaderSource from '@/shaders/shape-style.vert-shader.glsl?raw';
+import fragmentShaderSource from '@/shaders/shape-style.frag-shader.glsl?raw';
 
 type CacheMap = {
     vbo: WebGLBuffer;
