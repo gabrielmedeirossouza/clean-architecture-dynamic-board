@@ -1,4 +1,4 @@
-import { EventAdapter } from "@/patterns";
+import { EventAdapter } from "@/core";
 
 export class EventMonostate
 {
