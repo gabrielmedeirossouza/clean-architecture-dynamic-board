@@ -1,3 +1,3 @@
-export * from './camera';
-export * from './rendering';
+export * from './cameras';
+export * from './renderers';
 export * from './styles';
