@@ -2,11 +2,21 @@ import { CameraProtocol, CanvasProviderProtocol, RendererProtocol } from "@/doma
 
 export abstract class GlRendererProtocol<T> extends RendererProtocol
 {
+	public readonly width: number;
+
+	public readonly height: number;
+
+	public readonly gl: T;
+
 	constructor(
 		camera: CameraProtocol,
-		public readonly canvasProvider: CanvasProviderProtocol<T>,
+		canvasProvider: CanvasProviderProtocol<T>,
 	)
 	{
 		super(camera);
+
+		this.width = canvasProvider.width;
+		this.height = canvasProvider.height;
+		this.gl = canvasProvider.context;
 	}
 }

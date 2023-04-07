@@ -1,8 +1,7 @@
 import { GlLog } from "@/core";
 import { Actor, GlRendererHandlerProtocol, GlRendererProtocol } from "@/domain";
 import { ShapeStyle } from "@/infrastructure";
-import vertexShaderSource from '@/shaders/shape-style.vert-shader.glsl?raw';
-import fragmentShaderSource from '@/shaders/shape-style.frag-shader.glsl?raw';
+import { shapeStyleVertShader, shapeStyleFragShader } from '@/presenter';
 
 type CacheMap = {
     vbo: WebGLBuffer;
@@ -36,7 +35,7 @@ export class GlRendererShapeStyleHandler extends GlRendererHandlerProtocol
 		super(next);
 	}
 
-	public Handle(renderer: GlRendererProtocol, actor: ActorWithShapeStyle): void
+	public Handle(renderer: GlRendererProtocol<WebGL2RenderingContext>, actor: ActorWithShapeStyle): void
 	{
 		if (!(actor.style instanceof ShapeStyle)) return this._Next(renderer, actor);
 
@@ -58,17 +57,17 @@ export class GlRendererShapeStyleHandler extends GlRendererHandlerProtocol
 		this._Render(renderer, actor as ActorWithShapeStyle);
 	}
 
-	private _Prepare(renderer: GlRendererProtocol): void
+	private _Prepare(renderer: GlRendererProtocol<WebGL2RenderingContext>): void
 	{
 		const vertexShader = renderer.gl.createShader(renderer.gl.VERTEX_SHADER)!;
 		GlLog.CheckShaderCreation(vertexShader);
-		renderer.gl.shaderSource(vertexShader, vertexShaderSource);
+		renderer.gl.shaderSource(vertexShader, shapeStyleVertShader);
 		renderer.gl.compileShader(vertexShader);
 		GlLog.CheckShaderCompileStatus(renderer.gl, vertexShader);
 
 		const fragmentShader = renderer.gl.createShader(renderer.gl.FRAGMENT_SHADER)!;
 		GlLog.CheckShaderCreation(fragmentShader);
-		renderer.gl.shaderSource(fragmentShader, fragmentShaderSource);
+		renderer.gl.shaderSource(fragmentShader, shapeStyleFragShader);
 		renderer.gl.compileShader(fragmentShader);
 		GlLog.CheckShaderCompileStatus(renderer.gl, fragmentShader);
 
@@ -94,12 +93,13 @@ export class GlRendererShapeStyleHandler extends GlRendererHandlerProtocol
 		});
 	}
 
-	private _Render(renderer: GlRendererProtocol, actor: ActorWithShapeStyle): void
+	private _Render(renderer: GlRendererProtocol<WebGL2RenderingContext>, actor: ActorWithShapeStyle): void
 	{
-		const { width, height } = renderer.canvas;
-		const normalizedProjection = renderer.camera.projection;
-		renderer.gl.uniformMatrix4fv(this._projectionULocation, true, new Float32Array(normalizedProjection.data));
-		renderer.gl.uniform2f(this._viewportSizeULocation, width, height);
+		const { camera, width, height, gl } = renderer;
+
+		const normalizedProjection = camera.projection; // TODO: Render camera projection just when it changes
+		gl.uniformMatrix4fv(this._projectionULocation, true, new Float32Array(normalizedProjection.data));
+		gl.uniform2f(this._viewportSizeULocation, width, height);
 
 		const cache = this._cacheMap.get(actor.uuid)!;
 
@@ -119,35 +119,37 @@ export class GlRendererShapeStyleHandler extends GlRendererHandlerProtocol
 			xl, yb, 0,
 		]);
 
-		renderer.gl.bufferData(renderer.gl.ARRAY_BUFFER, vertices, renderer.gl.DYNAMIC_DRAW, 0);
-		renderer.gl.uniform4f(cache.colorUL, cache.color[0], cache.color[1], cache.color[2], cache.color[3]);
-		renderer.gl.drawElements(renderer.gl.TRIANGLES, 6, renderer.gl.UNSIGNED_SHORT, 0);
+		gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.DYNAMIC_DRAW, 0);
+		gl.uniform4f(cache.colorUL, cache.color[0], cache.color[1], cache.color[2], cache.color[3]);
+		gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
 	}
 
-	private _CreateCache(renderer: GlRendererProtocol, actor: ActorWithShapeStyle): void
+	private _CreateCache(renderer: GlRendererProtocol<WebGL2RenderingContext>, actor: ActorWithShapeStyle): void
 	{
-		const vbo = renderer.gl.createBuffer()!;
+		const { gl, width, height } = renderer;
+
+		const vbo = gl.createBuffer()!;
 		GlLog.CheckBufferCreation(vbo);
-		renderer.gl.bindBuffer(renderer.gl.ARRAY_BUFFER, vbo);
+		gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
 
-		const vao = renderer.gl.createVertexArray()!;
+		const vao = gl.createVertexArray()!;
 		GlLog.CheckVertexArrayCreation(vao);
-		renderer.gl.bindVertexArray(vao);
-		renderer.gl.vertexAttribPointer(0, 3, renderer.gl.FLOAT, false, 3 * Float32Array.BYTES_PER_ELEMENT, 0);
-		renderer.gl.enableVertexAttribArray(0);
+		gl.bindVertexArray(vao);
+		gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 3 * Float32Array.BYTES_PER_ELEMENT, 0);
+		gl.enableVertexAttribArray(0);
 
-		const ebo = renderer.gl.createBuffer()!;
+		const ebo = gl.createBuffer()!;
 		GlLog.CheckBufferCreation(ebo);
-		renderer.gl.bindBuffer(renderer.gl.ELEMENT_ARRAY_BUFFER, ebo);
+		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ebo);
 
 		const indices = new Uint16Array([
 			0, 1, 2,
 			0, 2, 3
 		]);
 
-		renderer.gl.bufferData(renderer.gl.ELEMENT_ARRAY_BUFFER, indices, renderer.gl.DYNAMIC_DRAW);
+		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.DYNAMIC_DRAW);
 
-		const colorUL = renderer.gl.getUniformLocation(this._program, "shapeColor")!;
+		const colorUL = gl.getUniformLocation(this._program, "shapeColor")!;
 		const [r, g, b, a] = actor.style.color.value.map(fragmentColor => fragmentColor / 255);
 
 		this._cacheMap.set(actor.uuid, {
@@ -155,8 +157,8 @@ export class GlRendererShapeStyleHandler extends GlRendererHandlerProtocol
 			vao,
 			colorUL,
 			color: [r, g, b, a],
-			invWidth: 1 / renderer.canvas.width * 2,
-			invHeight: 1 / renderer.canvas.height * 2,
+			invWidth: 1 / width * 2,
+			invHeight: 1 / height * 2,
 		});
 	}
 }

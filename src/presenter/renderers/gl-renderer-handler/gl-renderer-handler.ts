@@ -9,7 +9,7 @@ export class GlRendererHandler extends GlRendererHandlerProtocol
 		super(next);
 	}
 
-	public Handle(renderer: GlRendererProtocol, actor: Actor): void
+	public Handle(renderer: GlRendererProtocol<WebGL2RenderingContext>, actor: Actor): void
 	{
 		const isToRender = actor.style && actor.style.isVisible;
 		if (!isToRender) return;

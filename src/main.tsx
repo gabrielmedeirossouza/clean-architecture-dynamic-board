@@ -1,8 +1,10 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { EditorPage } from '@/presenter/pages';
+import './style.css';
 
-ReactDOM.createRoot(document.querySelector('#root') as HTMLElement).render(
-	<React.StrictMode>
-		<React.Fragment>hello world</React.Fragment>
-	</React.StrictMode>,
+const target = document.querySelector('#root') as HTMLElement;
+const reactRoot = ReactDOM.createRoot(target);
+
+reactRoot.render(
+	<EditorPage />
 );
