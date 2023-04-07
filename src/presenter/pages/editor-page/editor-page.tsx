@@ -12,7 +12,7 @@ export function EditorPage(): JSX.Element
 	{
 		if (!boardRef.current) return;
 
-		const camera = new CameraOrthographic(0, window.innerWidth, 0, window.innerHeight, 0, 1000);
+		const camera = new CameraOrthographic(0, boardRef.current.clientWidth, 0, boardRef.current.clientHeight, 0, 1000);
 		const canvasProvider = new GlCanvasProvider(boardRef.current);
 		const renderer = new GlRenderer(camera, canvasProvider);
 		const board = new Board(renderer);
