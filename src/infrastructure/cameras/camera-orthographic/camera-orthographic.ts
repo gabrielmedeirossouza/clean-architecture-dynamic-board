@@ -16,14 +16,18 @@ export class CameraOrthographic extends CameraProtocol
 		const height = top - bottom;
 		const depth = far - near;
 
-		const tx = -(right + left) / width;
-		const ty = -(top + bottom) / height;
-		const tz = -(far + near) / depth;
+		const scaleX = 2 / width;
+		const scaleY = 2 / height;
+		const scaleZ = -2 / depth;
+
+		const translateX = -(right + left) / width;
+		const translateY = -(top + bottom) / height;
+		const translateZ = -(far + near) / depth;
 
 		const projectionMatrix = new Matrix4([
-			2 / width, 0, 0, tx,
-			0, 2 / height, 0, ty,
-			0, 0, -2 / depth, tz,
+			scaleX, 0, 0, translateX,
+			0, scaleY, 0, translateY,
+			0, 0, scaleZ, translateZ,
 			0, 0, 0, 1
 		]);
 
