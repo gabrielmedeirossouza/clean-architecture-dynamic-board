@@ -21,8 +21,8 @@ export function EditorPage(): JSX.Element
 	}, [boardRef]);
 
 	return (
-		<div ref={boardRef} className={styles.container}>
-			<div className={styles.board} />
+		<div className={styles.container}>
+			<section ref={boardRef} className={styles.board} />
 		</div>
 	);
 }
