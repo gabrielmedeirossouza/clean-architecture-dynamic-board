@@ -1,7 +1,8 @@
+import React from 'react';
 import { Board } from '@/application';
 import { CameraOrthographic } from '@/infrastructure';
-import { GlRenderer, GlCanvasProvider, GlRendererShapeStyleHandler, GlRendererHandler } from '@/presenter';
-import React from 'react';
+import { GlRenderer, GlCanvasProvider } from '@/presenter';
+import styles from './styles.module.scss';
 
 export function EditorPage(): JSX.Element
 {
@@ -13,16 +14,15 @@ export function EditorPage(): JSX.Element
 
 		const camera = new CameraOrthographic(0, window.innerWidth, 0, window.innerHeight, 0, 1000);
 		const canvasProvider = new GlCanvasProvider(boardRef.current);
-
-		const glRendererShapeStyleHandler = new GlRendererShapeStyleHandler();
-		const rendererHandler = new GlRendererHandler(glRendererShapeStyleHandler);
-
-		const renderer = new GlRenderer(camera, canvasProvider, rendererHandler);
+		const renderer = new GlRenderer(camera, canvasProvider);
 		const board = new Board(renderer);
+
 		board.Update();
 	}, [boardRef]);
 
 	return (
-		<div style={{ width: "100vw", height: "100vh", overflow: "hidden" }} ref={boardRef}></div>
+		<div ref={boardRef} className={styles.container}>
+			<div className={styles.board} />
+		</div>
 	);
 }

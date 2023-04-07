@@ -1,14 +1,19 @@
 import { CameraProtocol, GlRendererProtocol, CanvasProviderProtocol, GlRendererHandlerProtocol } from "@/domain";
+import { GlRendererHandler, GlRendererShapeStyleHandler } from "@/presenter";
 
 export class GlRenderer extends GlRendererProtocol<WebGL2RenderingContext>
 {
+	private readonly _rendererHandler: GlRendererHandlerProtocol;
+
 	constructor(
 		camera: CameraProtocol,
-		canvasProvider: CanvasProviderProtocol<WebGL2RenderingContext>,
-		private readonly _rendererHandler: GlRendererHandlerProtocol
+		canvasProvider: CanvasProviderProtocol<WebGL2RenderingContext>
 	)
 	{
 		super(camera, canvasProvider);
+
+		const glRendererShapeStyleHandler = new GlRendererShapeStyleHandler();
+		this._rendererHandler = new GlRendererHandler(glRendererShapeStyleHandler);
 	}
 
 	protected _Prepare(): void
