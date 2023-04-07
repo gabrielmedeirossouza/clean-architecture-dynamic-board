@@ -1,4 +1,6 @@
-import { CameraProtocol, CanvasProviderProtocol, RendererProtocol } from "@/domain";
+
+import { CameraProtocol, CanvasProviderProtocol } from "@/domain";
+import { RendererProtocol } from "../renderer-protocol";
 
 export abstract class GlRendererProtocol<T> extends RendererProtocol
 {

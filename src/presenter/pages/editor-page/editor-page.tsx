@@ -19,9 +19,10 @@ export function EditorPage(): JSX.Element
 
 		const renderer = new GlRenderer(camera, canvasProvider, rendererHandler);
 		const board = new Board(renderer);
+		board.Update();
 	}, [boardRef]);
 
 	return (
-		<div ref={boardRef}></div>
+		<div style={{ width: "100vw", height: "100vh", overflow: "hidden" }} ref={boardRef}></div>
 	);
 }
