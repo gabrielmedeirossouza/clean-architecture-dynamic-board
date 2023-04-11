@@ -1,4 +1,7 @@
+import { M, Matrix4 } from "../matrix4";
 import { Vector } from "../vector";
+import { Vector3 } from "../vector3";
+import { Vector4 } from "../vector4";
 
 export class Vector2 extends Vector<Vector2>
 {
@@ -99,6 +102,29 @@ export class Vector2 extends Vector<Vector2>
 	public static Negate(vector: Vector2): Vector2
 	{
 		return new Vector2(vector.x * -1, vector.y * -1);
+	}
+
+	public static FromVector3(vector: Vector3): Vector2
+	{
+		return new Vector2(vector.x, vector.y);
+	}
+
+	public static FromVector4(vector: Vector4): Vector2
+	{
+		return new Vector2(vector.x, vector.y);
+	}
+
+	public static FromMatrix4(matrix: Matrix4): Vector2
+	{
+		return new Vector2(matrix.data[M.a14], matrix.data[M.a24]);
+	}
+
+	public static NDC(vector: Vector2, viewportWidth: number, viewportHeight: number): Vector2
+	{
+		const x = (vector.x / viewportWidth) * 2 - 1;
+		const y = (vector.y / viewportHeight) * 2 - 1;
+
+		return new Vector2(x, y);
 	}
 
 	public get magnitude(): number

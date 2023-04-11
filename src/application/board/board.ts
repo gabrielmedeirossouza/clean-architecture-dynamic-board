@@ -10,7 +10,7 @@ export class Board
 	)
 	{}
 
-	public get actors(): ReadonlyArray<Actor>
+	public get actors(): Actor[]
 	{
 		return this._actors;
 	}

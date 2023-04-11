@@ -1,3 +1,5 @@
+import { Vector2 } from "@/core/math";
+
 type Clamp = {
     value: number;
     isClamped: boolean;
@@ -34,13 +36,13 @@ export class MathHelper
      * @param y - The y coordinate of the point to transform.
      * @param viewportWidth - The width of the viewport/screen/device.
      * @param viewportHeight - The height of the viewport/screen/device.
-     * @returns A tuple containing the transformed x and y coordinates.
+     * @returns A tuple containing the x and y coordinates of the transformed point.
      */
-	public static NDC(x: number, y: number, viewportWidth: number, viewportHeight: number): [x: number, y: number]
+	public static NDC(x: number, y: number, viewportWidth: number, viewportHeight: number): Vector2
 	{
-		return [
+		return new Vector2(
 			(x / viewportWidth) * 2 - 1,
 			(y / viewportHeight) * 2 - 1
-		];
+		);
 	}
 }

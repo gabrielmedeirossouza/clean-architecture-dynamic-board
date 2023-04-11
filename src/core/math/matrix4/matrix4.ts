@@ -143,7 +143,19 @@ export class Matrix4 extends Matrix<Matrix4>
 		return new Matrix4(resultData);
 	}
 
-	public static Matrix4FromVector2(vec: Vector2): Matrix4
+	public static NDC(self: Matrix4, viewportWidth: number, viewportHeight: number): Matrix4
+	{
+		const ndcMatrix = new Matrix4([
+			viewportWidth * 0.5, 0, 0, viewportWidth * 0.5,
+			0, viewportHeight * 0.5, 0, viewportHeight * 0.5,
+			0, 0, 1, 0,
+			0, 0, 0, 1,
+		]);
+
+		return Matrix4.Multiply(self, ndcMatrix);
+	}
+
+	public static FromVector2(vec: Vector2): Matrix4
 	{
 		return new Matrix4([
 			1, 0, 0, vec.x,

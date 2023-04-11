@@ -10,7 +10,9 @@ export abstract class CameraProtocol
 	public readonly observable = new Observable<CameraObserverMap>();
 
 	constructor(
-        private _projection: Matrix4
+        private _projection: Matrix4,
+        public readonly viewportX: number,
+        public readonly viewportY: number
 	)
 	{}
 

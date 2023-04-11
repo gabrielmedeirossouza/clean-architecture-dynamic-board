@@ -8,8 +8,6 @@ type CacheMap = {
     vao: WebGLVertexArrayObject;
     color: [r: number, g: number, b: number, a: number];
     colorUL: WebGLUniformLocation;
-    invWidth: number;
-    invHeight: number;
 }
 
 interface ActorWithShapeStyle extends Actor {
@@ -95,7 +93,7 @@ export class GlRendererShapeStyleHandler extends GlRendererHandlerProtocol
 
 	private _Render(renderer: GlRendererProtocol<WebGL2RenderingContext>, actor: ActorWithShapeStyle): void
 	{
-		const { camera, width, height, gl } = renderer;
+		const { gl, camera, width, height } = renderer;
 
 		const normalizedProjection = camera.projection; // TODO: Render camera projection just when it changes
 		gl.uniformMatrix4fv(this._projectionULocation, true, new Float32Array(normalizedProjection.data));
@@ -104,13 +102,13 @@ export class GlRendererShapeStyleHandler extends GlRendererHandlerProtocol
 		const cache = this._cacheMap.get(actor.uuid)!;
 
 		const { x, y } = actor.transform.position.world;
-		const halfWidth = actor.style.width.value * 0.5;
-		const halfHeight = actor.style.height.value * 0.5;
+		const scalarPivotWidth = actor.style.width.value * actor.style.pivot.x;
+		const scalarPivotHeight = actor.style.height.value * actor.style.pivot.y;
 
-		const xl = (x - halfWidth) * cache.invWidth;
-		const xr = (x + halfWidth) * cache.invWidth;
-		const yt = (y + halfHeight) * cache.invHeight;
-		const yb = (y - halfHeight) * cache.invHeight;
+		const xl = (x - scalarPivotWidth);
+		const xr = (x + scalarPivotWidth);
+		const yt = (y + scalarPivotHeight);
+		const yb = (y - scalarPivotHeight);
 
 		const vertices = new Float32Array([
 			xl, yt, 0,
@@ -126,7 +124,7 @@ export class GlRendererShapeStyleHandler extends GlRendererHandlerProtocol
 
 	private _CreateCache(renderer: GlRendererProtocol<WebGL2RenderingContext>, actor: ActorWithShapeStyle): void
 	{
-		const { gl, width, height } = renderer;
+		const { gl } = renderer;
 
 		const vbo = gl.createBuffer()!;
 		GlLog.CheckBufferCreation(vbo);
@@ -157,8 +155,6 @@ export class GlRendererShapeStyleHandler extends GlRendererHandlerProtocol
 			vao,
 			colorUL,
 			color: [r, g, b, a],
-			invWidth: 1 / width * 2,
-			invHeight: 1 / height * 2,
 		});
 	}
 }

@@ -1,4 +1,4 @@
-import { Matrix4 } from "@/core";
+import { Matrix4, Vector3 } from "@/core";
 import { CameraProtocol } from "@/domain";
 
 export class CameraOrthographic extends CameraProtocol
@@ -31,6 +31,8 @@ export class CameraOrthographic extends CameraProtocol
 			0, 0, 0, 1
 		]);
 
-		super(projectionMatrix);
+		const centeredProjectionMatrix = Matrix4.Translate(projectionMatrix, new Vector3(width / 2, height / 2, 0));
+
+		super(centeredProjectionMatrix, width, height);
 	}
 }

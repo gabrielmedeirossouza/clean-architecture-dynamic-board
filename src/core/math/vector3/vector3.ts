@@ -1,4 +1,6 @@
 import { Vector } from "../vector";
+import { Vector2 } from "../vector2";
+import { Vector4 } from "../vector4";
 
 export class Vector3 extends Vector<Vector3>
 {
@@ -49,6 +51,16 @@ export class Vector3 extends Vector<Vector3>
 	public static get back(): Vector3
 	{
 		return new Vector3(0, 0, -1);
+	}
+
+	public static FromVector2(vector: Vector2): Vector3
+	{
+		return new Vector3(vector.x, vector.y, 0);
+	}
+
+	public static FromVector4(vector: Vector4): Vector3
+	{
+		return new Vector3(vector.x, vector.y, vector.z);
 	}
 
 	public Clone(): Vector3
