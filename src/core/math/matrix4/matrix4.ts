@@ -70,6 +70,33 @@ export class Matrix4 extends Matrix<Matrix4>
 		return selfClone;
 	}
 
+	public static ScaleX(self: Matrix4, scale: number): Matrix4
+	{
+		const selfClone = self.Clone();
+
+		selfClone.data[M.a11] *= scale;
+
+		return selfClone;
+	}
+
+	public static ScaleY(self: Matrix4, scale: number): Matrix4
+	{
+		const selfClone = self.Clone();
+
+		selfClone.data[M.a22] *= scale;
+
+		return selfClone;
+	}
+
+	public static ScaleZ(self: Matrix4, scale: number): Matrix4
+	{
+		const selfClone = self.Clone();
+
+		selfClone.data[M.a33] *= scale;
+
+		return selfClone;
+	}
+
 	public static RotateX(self: Matrix4, radians: number): Matrix4
 	{
 		const sin = Math.sin(radians);
